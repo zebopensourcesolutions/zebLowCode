@@ -4,7 +4,8 @@
 	<artifactId>lowcode.parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+	<description>Low Code Framework um aus einem Domain Driven Design möglichst viel relevanten Code zu generieren (OR-Mapper, Modellklassen, teilweise Services und einfache Oberflächen).</description>
+
 	<organization>
 		<name>zeb.it</name>
 	</organization>
