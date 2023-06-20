@@ -1,0 +1,76 @@
+/*
+ * COPYRIGHT:
+ *
+ * TITLE TO THE CODE REMAIN WITH ZEB/INFORMATION.TECHNOLOGY. THE CODE IS COPYRIGHTED AND PROTECTED BY LAW. YOU WILL NOT
+ * REMOVE ANY COPYRIGHT NOTICE FROM THE CODE. REASSEMBLING, RECOMPILATION, TRANSFER, DISTRIBUTION OR MODIFICATION OF
+ * PART OR ALL OF THE CODE IN ANY FORM WITHOUT THE PRIOR WRITTEN PERMISSION OF ZEB/INFORMATION.TECHNOLOGY IS PROHIBITED.
+ *
+ * created: 09.03.2023 - 07:32:13
+ */
+package de.zeb.lowcode.model.domain;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.Singular;
+
+
+/**
+ * @author dkleine
+ *
+ */
+@Data
+@Builder
+public class Entitaet {
+    public final String              name;
+    public final String              beschreibung;
+    @Singular( "feld" )
+    public final List<Entitaetsfeld> felder;
+    public final Entitaetreferenz    erbtVon;
+    @Builder.Default
+    public final boolean             abstrakt      = false;
+    @Builder.Default
+    public final boolean             persistenz    = true;
+    /**
+     * Definiert, ob eine Enitität eigenständig existiert oder nur als Kind einer anderen Entität
+     */
+    @Builder.Default
+    public final boolean             eigenstaendig = true;
+    public final String              paket;
+    public final String              dbTabellenname;
+
+    public List<? extends Entitaetsfeld> getAlleFelderMitZielentitaeten() {
+        return getFelder().stream().filter( e -> e.getZielEntitaet() != null ).collect( Collectors.toList() );
+    }
+
+    public String getNameCapitalized() {
+        return StringUtils.capitalize( getName() );
+    }
+
+    public String getNameUncapitalized() {
+        return StringUtils.uncapitalize( getName() );
+    }
+
+    public Optional<? extends Entitaetsfeld> getFeld( final String name ) {
+        return getFelder().stream().filter( e -> e.getName().equals( name ) ).findFirst();
+    }
+
+    public List<Entitaetsfeld> getFelderMitVererbung( final DomainModel domain ) {
+        List<Entitaetsfeld> felder = new ArrayList<>();
+        felder.addAll( getFelder() );
+        if ( getErbtVon() != null ) {
+            Entitaet entitaetByReference = domain.getEntitaetByReference( getErbtVon() );
+            if ( entitaetByReference != null ) {
+                felder.addAll( entitaetByReference.getFelderMitVererbung( domain ) );
+            }
+        }
+        return felder;
+    }
+}
