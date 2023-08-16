@@ -22,15 +22,7 @@ import de.zeb.lowcode.model.domain.Entitaetreferenz;
 import de.zeb.lowcode.model.domain.Entitaetsfeld;
 import de.zeb.lowcode.model.domain.Wertebereich;
 import de.zeb.lowcode.model.domain.WertebereichEintrag;
-import de.zeb.lowcode.model.persistenz.DbIndex;
-import de.zeb.lowcode.model.persistenz.DbIndexart;
-import de.zeb.lowcode.model.persistenz.DbSpaltenTyp;
-import de.zeb.lowcode.model.persistenz.DbTabelle;
-import de.zeb.lowcode.model.persistenz.DbTabellenspalte;
-import de.zeb.lowcode.model.persistenz.Persistenzmodell;
 import de.zeb.lowcode.model.ui.Maske;
-import de.zeb.lowcode.model.ui.MaskenEntitaet;
-import de.zeb.lowcode.model.ui.MaskenEntitaetsfeld;
 import de.zeb.lowcode.model.ui.Maskenelement;
 import de.zeb.lowcode.model.ui.MaskenelementMitFeld;
 import de.zeb.lowcode.model.ui.MaskenelementMitParent;
@@ -82,9 +74,6 @@ class ContractTest {
         classes.add( Maske.class );
         classes.add( Maskenelement.class );
         classes.add( MaskenelementMitFeld.class );
-        // classes.add( MaskenelementMitParent.class );
-        classes.add( MaskenEntitaet.class );
-        classes.add( MaskenEntitaetsfeld.class );
         classes.add( UiModel.class );
         classes.add( Checkbox.class );
         classes.add( CustomComponentProp.class );
@@ -108,12 +97,6 @@ class ContractTest {
         classes.add( TextfeldValidierung.class );
         classes.add( Validierung.class );
         classes.add( ZahlfeldValidierung.class );
-        classes.add( Persistenzmodell.class );
-        classes.add( DbIndex.class );
-        classes.add( DbIndexart.class );
-        classes.add( DbSpaltenTyp.class );
-        classes.add( DbTabelle.class );
-        classes.add( DbTabellenspalte.class );
         return classes;
     }
 

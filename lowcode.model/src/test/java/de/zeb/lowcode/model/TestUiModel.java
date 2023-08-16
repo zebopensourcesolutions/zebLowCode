@@ -36,7 +36,7 @@ import de.zeb.lowcode.model.ui.maskenelemente.UiModelReact;
 class TestUiModel {
 
     @Test
-    void testFi() {
+    void testModell() {
         LowCodeModel ui = uimodellErzeugen();
         String json = new GsonBuilder().setPrettyPrinting().create().toJson( ui );
         assertTrue( json.length() > 100 );
@@ -113,6 +113,7 @@ class TestUiModel {
                 .element( aktiv )
                 .element( turnus )
                 .element( ultimo )
+                .entitaet( e1 )
                 .build();
         UiModelReact ui = UiModelReact.builder()
                 .apiPagesFile( "J:\\temp\\generated\\api\\index.generated.ts" )

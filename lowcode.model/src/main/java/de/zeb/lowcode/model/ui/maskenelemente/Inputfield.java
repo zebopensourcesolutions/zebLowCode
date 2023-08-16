@@ -5,13 +5,12 @@
  * REMOVE ANY COPYRIGHT NOTICE FROM THE CODE. REASSEMBLING, RECOMPILATION, TRANSFER, DISTRIBUTION OR MODIFICATION OF
  * PART OR ALL OF THE CODE IN ANY FORM WITHOUT THE PRIOR WRITTEN PERMISSION OF ZEB/INFORMATION.TECHNOLOGY IS PROHIBITED.
  *
- * created: 09.03.2023 - 07:32:50
+ * created: 02.03.2023 - 14:59:45
  */
-package de.zeb.lowcode.model.ui;
+package de.zeb.lowcode.model.ui.maskenelemente;
 
 
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import lombok.Builder;
+import de.zeb.lowcode.model.ui.MaskenelementMitFeld;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -21,11 +20,9 @@ import lombok.experimental.SuperBuilder;
  * @author dkleine
  *
  */
-@Data
-@EqualsAndHashCode( callSuper = true )
 @SuperBuilder
-public class MaskenEntitaetsfeld extends Entitaetsfeld {
-    @Builder.Default
-    public final boolean alsTabelle = false;
+@EqualsAndHashCode( callSuper = true )
+@Data
+public class Inputfield extends MaskenelementMitFeld {
 
 }

@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
@@ -28,7 +26,7 @@ import lombok.Singular;
  */
 @Data
 @Builder
-public class Entitaet {
+public class Entitaet implements EntitaetreferenzIf {
     public final String              name;
     public final String              beschreibung;
     @Singular( "feld" )
@@ -39,7 +37,9 @@ public class Entitaet {
     @Builder.Default
     public final boolean             persistenz    = true;
     /**
-     * Definiert, ob eine Enitität eigenständig existiert oder nur als Kind einer anderen Entität
+     * Definiert, ob eine Enitität eigenständig existiert oder nur als Kind einer anderen Entität.
+     * <p>
+     * Äquivalent zu Aggregate in DDD
      */
     @Builder.Default
     public final boolean             eigenstaendig = true;
@@ -48,14 +48,6 @@ public class Entitaet {
 
     public List<? extends Entitaetsfeld> getAlleFelderMitZielentitaeten() {
         return getFelder().stream().filter( e -> e.getZielEntitaet() != null ).collect( Collectors.toList() );
-    }
-
-    public String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
-    }
-
-    public String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
     }
 
     public Optional<? extends Entitaetsfeld> getFeld( final String name ) {
@@ -72,5 +64,9 @@ public class Entitaet {
             }
         }
         return felder;
+    }
+
+    public Entitaetreferenz getEntitaetreferenz() {
+        return Entitaetreferenz.builder().name( getName() ).paket( getPaket() ).build();
     }
 }

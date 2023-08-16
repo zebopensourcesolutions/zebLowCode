@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test;
 
 import de.zeb.lowcode.model.domain.Datentyp;
 import de.zeb.lowcode.model.domain.DomainModel;
+import de.zeb.lowcode.model.domain.Entitaet;
+import de.zeb.lowcode.model.domain.Entitaetsfeld;
 import de.zeb.lowcode.model.domain.Wertebereich;
 import de.zeb.lowcode.model.domain.WertebereichEintrag;
 import de.zeb.lowcode.model.ui.Maske;
-import de.zeb.lowcode.model.ui.MaskenEntitaet;
-import de.zeb.lowcode.model.ui.MaskenEntitaetsfeld;
 import de.zeb.lowcode.model.ui.maskenelemente.Checkbox;
 import de.zeb.lowcode.model.ui.maskenelemente.CustomComponentProp;
 import de.zeb.lowcode.model.ui.maskenelemente.CustomUiComponent;
@@ -69,44 +69,44 @@ class TestUiGeneratorMitTabs {
                 .eintrag( new WertebereichEintrag( "U9","9", "9" ) )
                 .eintrag( new WertebereichEintrag( "U10","10", "10" ) )
                 .build();
-        MaskenEntitaetsfeld feldAktiv = MaskenEntitaetsfeld.builder()
+        Entitaetsfeld feldAktiv = Entitaetsfeld.builder()
                                     .fachlicherName( "Nachverarbeitung aktiv" )
                                     .name( "aktiv" )
                                     .beschreibung( "Definiert ob die Nachtverarbeitung ausgeführt werden soll." )
                                     .datenTyp( Datentyp.BOOLEAN )
                                     .build();
-        MaskenEntitaetsfeld feldRegelturnus = MaskenEntitaetsfeld.builder()
+        Entitaetsfeld feldRegelturnus = Entitaetsfeld.builder()
                                     .fachlicherName( "Regelturnus" )
                                     .name( "turnus" )
                                     .beschreibung( "Definiert den Regelturnus, als den Turnus in dem eine Nachtverarbeitung ausgeführt werden soll (Monatlich, Quartärlich etc.)." )
                                     .wertebereich( turnusWb )
                                     .build();
-        MaskenEntitaetsfeld feldUltimo = MaskenEntitaetsfeld.builder()
+        Entitaetsfeld feldUltimo = Entitaetsfeld.builder()
                                     .fachlicherName( "Verarbeitungstag: Ultimo+" )
                                     .name( "ultimo" )
                                     .optional( true )
                                     .beschreibung( "Bankarbeitstage nach Ultimo" )
                                     .wertebereich( offsettWb )
                                     .build();
-        MaskenEntitaetsfeld feldId = MaskenEntitaetsfeld.builder()
+        Entitaetsfeld feldId = Entitaetsfeld.builder()
                 .fachlicherName( "Eindeutige ID" )
                 .name( "id" )
                 .pk( true )
                 .datenTyp( Datentyp.ZEITSTEMPEL )
                 .build();
-        MaskenEntitaetsfeld jobId = MaskenEntitaetsfeld.builder()
+        Entitaetsfeld jobId = Entitaetsfeld.builder()
                 .fachlicherName( "Job ID" )
                 .name( "jobId" )
                 .optional( true )
                 .datenTyp( Datentyp.ZEITSTEMPEL )
                 .build();
-        MaskenEntitaet e1 = MaskenEntitaet.builder()
+        Entitaet e1 = Entitaet.builder()
                 .name( "NachtverarbeitungPar" )
-                .maskenfeld( feldId )
-                .maskenfeld( feldAktiv)
-                .maskenfeld( jobId)
-                .maskenfeld( feldRegelturnus)
-                .maskenfeld( feldUltimo)
+                .feld( feldId )
+                .feld( feldAktiv)
+                .feld( jobId)
+                .feld( feldRegelturnus)
+                .feld( feldUltimo)
                 .build();
         Checkbox aktiv = Checkbox.builder()
                 .feld( feldAktiv )

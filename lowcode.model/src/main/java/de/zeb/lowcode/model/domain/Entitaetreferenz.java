@@ -21,7 +21,7 @@ import lombok.NonNull;
  */
 @Data
 @Builder
-public class Entitaetreferenz {
+public class Entitaetreferenz implements EntitaetreferenzIf {
     @NonNull
     public final String name;
     public final String paket;
