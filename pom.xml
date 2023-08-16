@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.zeb.lowcode</groupId>
 	<artifactId>lowcode.parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Low Code Framework um aus einem Domain Driven Design möglichst viel relevanten Code zu generieren (OR-Mapper, Modellklassen, teilweise Services und einfache Oberflächen).</description>
 
@@ -18,6 +18,8 @@
 	
 	<modules>
 		<module>lowcode.model</module>
+		<module>lowcode.generator</module>
+		<module>lowcode.example</module>
 	</modules>
 	
 	<dependencyManagement>
