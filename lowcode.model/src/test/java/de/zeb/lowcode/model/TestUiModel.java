@@ -113,7 +113,6 @@ class TestUiModel {
                 .element( aktiv )
                 .element( turnus )
                 .element( ultimo )
-                .entitaet( e1 )
                 .build();
         UiModelReact ui = UiModelReact.builder()
                 .apiPagesFile( "J:\\temp\\generated\\api\\index.generated.ts" )

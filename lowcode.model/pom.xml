@@ -8,6 +8,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
+	
 	<artifactId>lowcode.model</artifactId>
 	
 	<dependencies>
