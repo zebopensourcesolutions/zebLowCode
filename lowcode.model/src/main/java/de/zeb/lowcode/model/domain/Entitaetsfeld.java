@@ -51,8 +51,7 @@ public class Entitaetsfeld {
     public final Integer          anzahlNachkommastellen;
     @Builder.Default
     public final boolean          persistenz        = true;
-    @Builder.Default
-    public final 				  Fetchtyp fetchtyp = Fetchtyp.DEFAULT;
+
 
     public String getNameCapitalized() {
         return StringUtils.capitalize( getName() );

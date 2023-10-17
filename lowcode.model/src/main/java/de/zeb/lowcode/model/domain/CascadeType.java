@@ -14,6 +14,6 @@ package de.zeb.lowcode.model.domain;
  * @author dkleine
  *
  */
-public enum Fetchtyp {
+public enum CascadeType {
     EAGER, LAZY, DEFAULT
 }
