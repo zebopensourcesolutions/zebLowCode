@@ -15,5 +15,5 @@ package de.zeb.lowcode.model.domain;
  *
  */
 public enum CascadeType {
-    EAGER, LAZY, DEFAULT
+    DETACH, ALL, MERGE, PERSIST, REFRESH, REMOVE, DEFAULT
 }
