@@ -45,6 +45,8 @@ public class Entitaet implements EntitaetreferenzIf {
     public final boolean             eigenstaendig = true;
     public final String              paket;
     public final String              dbTabellenname;
+    @Builder.Default
+    public final DbIndex 			 dbIndex = null;
 
     public List<? extends Entitaetsfeld> getAlleFelderMitZielentitaeten() {
         return getFelder().stream().filter( e -> e.getZielEntitaet() != null ).collect( Collectors.toList() );
