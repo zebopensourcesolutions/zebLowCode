@@ -1,0 +1,573 @@
+package de.myorg.myapp.parts;
+
+import de.myorg.myapp.ModelPart;
+import de.zeb.lowcode.model.domain.Datentyp;
+import de.zeb.lowcode.model.domain.DomainModel.DomainModelBuilder;
+import de.zeb.lowcode.model.domain.Entitaet;
+import de.zeb.lowcode.model.domain.Entitaetreferenz;
+import de.zeb.lowcode.model.domain.Entitaetsfeld;
+
+public class Protokollierung implements ModelPart {
+
+    private final static String PAKET = "protokollierung";
+
+    public static Entitaet getDimInstitut() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionInstitut")
+                .beschreibung("Beinhaltet das Institut des OSPlus BI, damit Aktionen im Protokoll bei übergreifenden Auswertungen einem Institut zugeordnet werden können.")
+                .dbTabellenname("MYDB_PRTK_DIM_INST")
+                .eigenstaendig(false)
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("ID")
+                        .beschreibung("ID des Instituts als <Gruppe><Nummer>")
+                        .datenTyp(Datentyp.TEXT)
+                        .pk(true)
+                        .dbSpaltenname("INST_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("institutNummer")
+                        .fachlicherName("Instituts-Nummer")
+                        .beschreibung("Nummer zur Identifizierung einer Sparkasse innerhalb des Rechenzentrums.")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("INR")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("regionGruppe")
+                        .fachlicherName("Gruppen-Region")
+                        .beschreibung("Region der Gruppe des Instituts")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("GRP_REGN")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getDimElement() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionElement")
+                .beschreibung("Beinhaltet alle Elemente des OSPlus BI, damit Aktionen im Protokoll einem Element zugeordnet werden können")
+                .dbTabellenname("MYDB_PRTK_DIM_ELEM")
+                .eigenstaendig(false)
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("Element-ID")
+                        .beschreibung("ID des Elements")
+                        .datenTyp(Datentyp.ID)
+                        .fachlichEindeutig(true) //ID darf nicht generiert werden
+                        .pk(true)
+                        .dbSpaltenname("ELEM_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("nameElement")
+                        .fachlicherName("Element-Name")
+                        .beschreibung("Name des Elements")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("ELEM_NAME")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getDimUser() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionUser")
+                .beschreibung("Beinhaltet alle Benutzer des OSPlus BI, damit Aktionen im Protokoll einem Benutzer zugeordnet werden können")
+                .dbTabellenname("MYDB_PRTK_DIM_BNTZ")
+                .eigenstaendig(false)
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("Benutzer-ID")
+                        .beschreibung("ID des Benutzers")
+                        .datenTyp(Datentyp.TEXT)
+                        .pk(true)
+                        .dbSpaltenname("BNTZ_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("nameUser")
+                        .fachlicherName("Benutzer-Name")
+                        .beschreibung("Name des Benutzers")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("BNTZ_NAME")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getDimKennzahl() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionKennzahl")
+                .beschreibung("Beinhaltet alle Protokollierungs-Kennzahlen des OSPlus BI, um Messwerten im Protokoll eine Bedeutung geben zu können")
+                .dbTabellenname("MYDB_PRTK_DIM_KZHL")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("Protokollierungs-Kennzahl-ID")
+                        .beschreibung("ID der Protokollierungs-Kennzahl")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .pk(true)
+                        .dbSpaltenname("KZHL_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("nameKennzahl")
+                        .fachlicherName("Protokollierungs-Kennzahl-Name")
+                        .beschreibung("Name der Protokollierungs-Kennzahl")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("KZHL_NAME")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getDimAktion() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionAktion")
+                .beschreibung("Beinhaltet alle Aktionen des OSPlus BI, damit Einträge im Protokoll einer Aktion zugeordnet werden können")
+                .dbTabellenname("MYDB_PRTK_DIM_AKTN")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("Aktions-ID")
+                        .beschreibung("ID der Aktion")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .pk(true)
+                        .dbSpaltenname("AKTN_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("nameAktion")
+                        .fachlicherName("Aktions-Name")
+                        .beschreibung("Name der Aktion")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("AKTN_NAME")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getDimDatum() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("DimensionDatum")
+                .beschreibung("Beinhaltet alle Datumswerte seit 1990, damit Einträge im Protokoll einem Datum zugeordnet werden können")
+                .dbTabellenname("MYDB_PRTK_DIM_DTM")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("Datums-ID")
+                        .beschreibung("ID des Datums")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .pk(true)
+                        .dbSpaltenname("DTM_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("datum")
+                        .fachlicherName("Datum")
+                        .beschreibung("Datum als Datentyp Date")
+                        .datenTyp(Datentyp.DATUM)
+                        .dbSpaltenname("DIM_DTM_DTM")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("jahr")
+                        .fachlicherName("Jahr")
+                        .beschreibung("Jahr als vierstellige Zahl")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_JAHR")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("monat")
+                        .fachlicherName("Monat")
+                        .beschreibung("Monat als Zahl")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_MON")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("monatJahr")
+                        .fachlicherName("Monat und Jahr")
+                        .beschreibung("Monat mit Jahr")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_MON_JAHR")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("tag")
+                        .fachlicherName("Tag")
+                        .beschreibung("Tag des aktuellen Datums")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_TG")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("tagCode")
+                        .fachlicherName("Tag-Code")
+                        .beschreibung("Code des Tages mit 2 Buchstaben")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("DIM_DTM_TG_CODE")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("tagImJahr")
+                        .fachlicherName("TagImJahr")
+                        .beschreibung("Tag Im Jahr")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_TG_JAHR")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("tagInWoche")
+                        .fachlicherName("TagInWoche")
+                        .beschreibung("Tag der aktuellen Woche")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_WTAG")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("quartal")
+                        .fachlicherName("Quartal")
+                        .beschreibung("Quartal")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_QURT")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("tertial")
+                        .fachlicherName("Tertial")
+                        .beschreibung("Tertial")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_TERT")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("woche")
+                        .fachlicherName("Woche")
+                        .beschreibung("Woche des Jahres")
+                        .datenTyp(Datentyp.GANZZAHL)
+                        .dbSpaltenname("DIM_DTM_KW")
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getFactNutzungInhalt() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("FactNutzungInhalt")
+                .beschreibung("Faktentabelle in welcher der Abruf von Inhalten (Abfragen, Berichte...) des OSP-BI protokolliert wird")
+                .dbTabellenname("MYDB_PRTK_FACT_INHL")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("ID")
+                        .beschreibung("ID des Faktums als fortlaufende Nummer")
+                        .datenTyp(Datentyp.ID)
+                        .pk(true)
+                        .dbSpaltenname("INHL_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("zeitstempel")
+                        .fachlicherName("Zeitstempel")
+                        .beschreibung("Zeitstempel des Faktums")
+                        .datenTyp(Datentyp.ZEITSTEMPEL)
+                        .dbSpaltenname("ZPKT")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("user")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("BNTZ_ID")
+                        .beschreibung("ID des Benutzers")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionUser")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("datum")
+                        .dbSpaltenname("DTM_ID")
+                        .beschreibung("ID des Datums")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionDatum")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("element")
+                        .dbSpaltenname("ELEM_ID")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .beschreibung("ID des Elements")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionElement")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("elementTyp")
+                        .fachlicherName("Element-Typ")
+                        .beschreibung("Typ des Elements (z.B. Einzelabfrage)")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("ELEM_TYP")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("elementModus")
+                        .fachlicherName("Element-Modus")
+                        .beschreibung("Modus des Elements (Muster, Standard oder Individuell)")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("ELEM_MODS")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("aktion")
+                        .dbSpaltenname("AKTN_ID")
+                        .beschreibung("ID der Aktion")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionAktion")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("kennzahl")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("KZHL_ID")
+                        .beschreibung("ID der Protokollierungs-Kennzahl")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionKennzahl")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("institut")
+                        .dbSpaltenname("INST_ID")
+                        .beschreibung("ID des Instituts als <Gruppe><Nummer>")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionInstitut")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("wert")
+                        .fachlicherName("Wert")
+                        .beschreibung("Wert des Faktums")
+                        .datenTyp(Datentyp.ZAHL)
+                        .anzahlNachkommastellen(5)
+                        .dbSpaltenname("FACT_WERT")
+                        .build())
+
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getFactNutzungAnwendung() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("FactNutzungAnwendung")
+                .beschreibung("Faktentabelle in welcher die Nutzung von Anwendungskomponenten des OSP-BI protokolliert wird")
+                .dbTabellenname("MYDB_PRTK_FACT_ANWD")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("ID")
+                        .beschreibung("ID des Faktums")
+                        .datenTyp(Datentyp.ID)
+                        .pk(true)
+                        .dbSpaltenname("ANWD_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("zeitstempel")
+                        .fachlicherName("Zeitstempel")
+                        .beschreibung("Zeitstempel des Faktums")
+                        .datenTyp(Datentyp.ZEITSTEMPEL)
+                        .dbSpaltenname("ZPKT")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("user")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .beschreibung("ID des Benutzers")
+                        .dbSpaltenname("BNTZ_ID")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionUser")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("datum")
+                        .dbSpaltenname("DTM_ID")
+                        .beschreibung("ID des Datums")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionDatum")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("komponente")
+                        .fachlicherName("Komponente")
+                        .beschreibung("Komponente")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("KOMP_NAME")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("institut")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("INST_ID")
+                        .beschreibung("ID des Instituts als <Gruppe><Nummer>")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionInstitut")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .build();
+
+        
+
+    }
+
+    public static Entitaet getFactEreignis() {
+        
+        return Entitaet.builder()
+                .paket(PAKET)
+
+                .name("FactEreignis")
+                .beschreibung("Alle Ereignisse in OSPlus-BI, z.B. Wertänderungen, SQL-Ausführungen etc.")
+                .dbTabellenname("MYDB_PRTK_FACT_EGNS")
+                .feld(Entitaetsfeld.builder()
+                        .name("id")
+                        .fachlicherName("ID")
+                        .beschreibung("ID des Faktums")
+                        .datenTyp(Datentyp.ID)
+                        .pk(true)
+                        .dbSpaltenname("EGNS_ID")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("zeitstempel")
+                        .fachlicherName("Zeitstempel")
+                        .beschreibung("Zeitstempel des Faktums")
+                        .datenTyp(Datentyp.ZEITSTEMPEL)
+                        .dbSpaltenname("ZPKT")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("user")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .beschreibung("ID des Benutzers")
+                        .dbSpaltenname("BNTZ_ID")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionUser")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("datum")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("DTM_ID")
+                        .beschreibung("ID des Datums")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionDatum")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("element")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("ELEM_ID")
+                        .beschreibung("ID des Elements")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionElement")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("elementTyp")
+                        .fachlicherName("Element-Typ")
+                        .beschreibung("Typ des Elements (z.B. Einzelabfrage)")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("ELEM_TYP")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("elementModus")
+                        .fachlicherName("Element-Modus")
+                        .beschreibung("Modus des Elements (Muster, Standard oder Individuell)")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("ELEM_MODS")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("aktion")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("AKTN_ID")
+                        .beschreibung("ID der Aktion")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionAktion")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("institut")
+                        .datenTyp(Datentyp.ENTITAET)
+                        .dbSpaltenname("INST_ID")
+                        .beschreibung("ID des Instituts als <Gruppe><Nummer>")
+                        .zielEntitaet(Entitaetreferenz.builder()
+                                .name("DimensionInstitut")
+                                .paket(PAKET)
+                                .build())
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("feld")
+                        .fachlicherName("Feld")
+                        .beschreibung("Name des betroffenen Feldes")
+                        .datenTyp(Datentyp.TEXT)
+                        .dbSpaltenname("EGNS_FELD")
+                        .build())
+                .feld(Entitaetsfeld.builder()
+                        .name("wert")
+                        .fachlicherName("Wert")
+                        .beschreibung("Neuer Wert des Feldes oder Beschreibung der Benutzer-Aktion")
+                        .datenTyp(Datentyp.TEXT)
+                        .anzahlZeichen(2097152)
+                        .dbSpaltenname("EGNS_WERT")
+                        .build())
+
+                .build();
+
+        
+
+    }
+
+    @Override
+    public void buildDomainModel(final DomainModelBuilder domain) {
+        
+        domain.entitaet(getDimElement());
+        domain.entitaet(getDimUser());
+        domain.entitaet(getDimKennzahl());
+        domain.entitaet(getDimAktion());
+        domain.entitaet(getDimDatum());
+        domain.entitaet(getDimInstitut());
+        domain.entitaet(getFactNutzungInhalt());
+        domain.entitaet(getFactNutzungAnwendung());
+        domain.entitaet(getFactEreignis());
+        
+
+    }
+
+
+}

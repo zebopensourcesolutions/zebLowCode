@@ -10,8 +10,7 @@
 package de.zeb.lowcode.model;
 
 
-import static org.junit.Assert.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
 import de.zeb.lowcode.model.domain.Datentyp;
@@ -49,7 +48,7 @@ class TestUiGeneratorMitTabs {
      * @return
      */
     private LowCodeModel uimodellErzeugen() {
-        //@formatter:off
+        
         Wertebereich turnusWb = Wertebereich.builder()
                 .name( "turnus" )
                 .eintrag( new WertebereichEintrag( "M", "Monatlich" ) )
@@ -131,7 +130,7 @@ class TestUiGeneratorMitTabs {
                 .feld( jobId )
                 .label( jobId.getFachlicherName() )
                 .tsImport( TypescriptImport.builder()
-                        .from( "@finanzinformatik/ospbi" )
+                        .from( "@myorg/myapp" )
                         .type( "JobMonitor" )
                         .build())
                 //Mappe Property "abfrageId" auf "jobId"
