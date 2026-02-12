@@ -30,3 +30,10 @@ replay_pid*
 .settings
 target
 release.properties
+/.idea/.gitignore
+/.idea/compiler.xml
+/.idea/copilot.data.migration.ask2agent.xml
+/.idea/encodings.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/vcs.xml
