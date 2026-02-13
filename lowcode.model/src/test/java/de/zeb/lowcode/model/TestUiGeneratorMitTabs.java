@@ -10,160 +10,148 @@
 package de.zeb.lowcode.model;
 
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import de.zeb.lowcode.model.domain.*;
+import de.zeb.lowcode.model.ui.Maske;
+import de.zeb.lowcode.model.ui.maskenelemente.*;
 import org.junit.jupiter.api.Test;
 
-import de.zeb.lowcode.model.domain.Datentyp;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.Wertebereich;
-import de.zeb.lowcode.model.domain.WertebereichEintrag;
-import de.zeb.lowcode.model.ui.Maske;
-import de.zeb.lowcode.model.ui.maskenelemente.Checkbox;
-import de.zeb.lowcode.model.ui.maskenelemente.CustomComponentProp;
-import de.zeb.lowcode.model.ui.maskenelemente.CustomUiComponent;
-import de.zeb.lowcode.model.ui.maskenelemente.Dropdown;
-import de.zeb.lowcode.model.ui.maskenelemente.MaskeGridItems;
-import de.zeb.lowcode.model.ui.maskenelemente.Tab;
-import de.zeb.lowcode.model.ui.maskenelemente.Tabs;
-import de.zeb.lowcode.model.ui.maskenelemente.UiModelReact;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
  * @author dkleine
  *
  */
-@SuppressWarnings( "nls" )
+@SuppressWarnings("nls")
 class TestUiGeneratorMitTabs {
 
     @Test
     void testWriteToFile() {
         LowCodeModel ui = uimodellErzeugen();
-        Maske<?> m = ui.getUi().getMasken().get( 0 );
-        assertNotNull( m );
+        Maske<?> m = ui.getUi().getMasken().get(0);
+        assertNotNull(m);
     }
 
     /**
      * @return
      */
     private LowCodeModel uimodellErzeugen() {
-        
+
         Wertebereich turnusWb = Wertebereich.builder()
-                .name( "turnus" )
-                .eintrag( new WertebereichEintrag( "M", "Monatlich" ) )
-                .eintrag( new WertebereichEintrag( "Q", "Quartärlich" ) )
-                .eintrag( new WertebereichEintrag( "J", "Jährlich" ) )
+                .name("turnus")
+                .eintrag(new WertebereichEintrag("M", "Monatlich"))
+                .eintrag(new WertebereichEintrag("Q", "Quartärlich"))
+                .eintrag(new WertebereichEintrag("J", "Jährlich"))
                 .build();
         Wertebereich offsettWb = Wertebereich.builder()
-                .name( "offsett" )
-                .eintrag( new WertebereichEintrag( "U1", "1", "1" ) )
-                .eintrag( new WertebereichEintrag( "U2","2", "2" ) )
-                .eintrag( new WertebereichEintrag( "U3","3", "3" ) )
-                .eintrag( new WertebereichEintrag( "U4","4", "4" ) )
-                .eintrag( new WertebereichEintrag( "U5","5", "5" ) )
-                .eintrag( new WertebereichEintrag( "U6","6", "6" ) )
-                .eintrag( new WertebereichEintrag( "U7","7", "7" ) )
-                .eintrag( new WertebereichEintrag( "U8","8", "8" ) )
-                .eintrag( new WertebereichEintrag( "U9","9", "9" ) )
-                .eintrag( new WertebereichEintrag( "U10","10", "10" ) )
+                .name("offsett")
+                .eintrag(new WertebereichEintrag("U1", "1", "1"))
+                .eintrag(new WertebereichEintrag("U2", "2", "2"))
+                .eintrag(new WertebereichEintrag("U3", "3", "3"))
+                .eintrag(new WertebereichEintrag("U4", "4", "4"))
+                .eintrag(new WertebereichEintrag("U5", "5", "5"))
+                .eintrag(new WertebereichEintrag("U6", "6", "6"))
+                .eintrag(new WertebereichEintrag("U7", "7", "7"))
+                .eintrag(new WertebereichEintrag("U8", "8", "8"))
+                .eintrag(new WertebereichEintrag("U9", "9", "9"))
+                .eintrag(new WertebereichEintrag("U10", "10", "10"))
                 .build();
         Entitaetsfeld feldAktiv = Entitaetsfeld.builder()
-                                    .fachlicherName( "Nachverarbeitung aktiv" )
-                                    .name( "aktiv" )
-                                    .beschreibung( "Definiert ob die Nachtverarbeitung ausgeführt werden soll." )
-                                    .datenTyp( Datentyp.BOOLEAN )
-                                    .build();
+                .fachlicherName("Nachverarbeitung aktiv")
+                .name("aktiv")
+                .beschreibung("Definiert ob die Nachtverarbeitung ausgeführt werden soll.")
+                .datenTyp(Datentyp.BOOLEAN)
+                .build();
         Entitaetsfeld feldRegelturnus = Entitaetsfeld.builder()
-                                    .fachlicherName( "Regelturnus" )
-                                    .name( "turnus" )
-                                    .beschreibung( "Definiert den Regelturnus, als den Turnus in dem eine Nachtverarbeitung ausgeführt werden soll (Monatlich, Quartärlich etc.)." )
-                                    .wertebereich( turnusWb )
-                                    .build();
+                .fachlicherName("Regelturnus")
+                .name("turnus")
+                .beschreibung("Definiert den Regelturnus, als den Turnus in dem eine Nachtverarbeitung ausgeführt werden soll (Monatlich, Quartärlich etc.).")
+                .wertebereich(turnusWb)
+                .build();
         Entitaetsfeld feldUltimo = Entitaetsfeld.builder()
-                                    .fachlicherName( "Verarbeitungstag: Ultimo+" )
-                                    .name( "ultimo" )
-                                    .optional( true )
-                                    .beschreibung( "Bankarbeitstage nach Ultimo" )
-                                    .wertebereich( offsettWb )
-                                    .build();
+                .fachlicherName("Verarbeitungstag: Ultimo+")
+                .name("ultimo")
+                .optional(true)
+                .beschreibung("Bankarbeitstage nach Ultimo")
+                .wertebereich(offsettWb)
+                .build();
         Entitaetsfeld feldId = Entitaetsfeld.builder()
-                .fachlicherName( "Eindeutige ID" )
-                .name( "id" )
-                .pk( true )
-                .datenTyp( Datentyp.ZEITSTEMPEL )
+                .fachlicherName("Eindeutige ID")
+                .name("id")
+                .pk(true)
+                .datenTyp(Datentyp.ZEITSTEMPEL)
                 .build();
         Entitaetsfeld jobId = Entitaetsfeld.builder()
-                .fachlicherName( "Job ID" )
-                .name( "jobId" )
-                .optional( true )
-                .datenTyp( Datentyp.ZEITSTEMPEL )
+                .fachlicherName("Job ID")
+                .name("jobId")
+                .optional(true)
+                .datenTyp(Datentyp.ZEITSTEMPEL)
                 .build();
         Entitaet e1 = Entitaet.builder()
-                .name( "NachtverarbeitungPar" )
-                .feld( feldId )
-                .feld( feldAktiv)
-                .feld( jobId)
-                .feld( feldRegelturnus)
-                .feld( feldUltimo)
+                .name("NachtverarbeitungPar")
+                .feld(feldId)
+                .feld(feldAktiv)
+                .feld(jobId)
+                .feld(feldRegelturnus)
+                .feld(feldUltimo)
                 .build();
         Checkbox aktiv = Checkbox.builder()
-                .feld( feldAktiv )
-                .label( "Nachverarbeitung aktiv" )
+                .feld(feldAktiv)
+                .label("Nachverarbeitung aktiv")
                 .build();
         Dropdown turnus = Dropdown.builder()
-                .feld( feldRegelturnus )
-                .label( feldRegelturnus.getFachlicherName() )
+                .feld(feldRegelturnus)
+                .label(feldRegelturnus.getFachlicherName())
                 .build();
         Dropdown ultimo = Dropdown.builder()
-                .feld( feldUltimo )
-                .label( feldUltimo.getFachlicherName() )
-                .tooltip( "Bankarbeitstage nach Ultimo" )
+                .feld(feldUltimo)
+                .label(feldUltimo.getFachlicherName())
+                .tooltip("Bankarbeitstage nach Ultimo")
                 .build();
         Tabs tabs = Tabs.builder()
-                .name( "hauptreiter" )
-                .tab( Tab.builder().name( "tabUltimo" ).label("Ultimo").maskenelement( ultimo ).build() )
-                .tab( Tab.builder().name( "tabTurnus" ).label("Turnus").maskenelement( turnus ).build() )
+                .name("hauptreiter")
+                .tab(Tab.builder().name("tabUltimo").label("Ultimo").maskenelement(ultimo).build())
+                .tab(Tab.builder().name("tabTurnus").label("Turnus").maskenelement(turnus).build())
                 .build();
         CustomUiComponent jobmonitor = CustomUiComponent.builder()
-                .component( "JobMonitor" )
-                .feld( jobId )
-                .label( jobId.getFachlicherName() )
-                .tsImport( TypescriptImport.builder()
-                        .from( "@myorg/myapp" )
-                        .type( "JobMonitor" )
+                .component("JobMonitor")
+                .feld(jobId)
+                .label(jobId.getFachlicherName())
+                .tsImport(TypescriptImport.builder()
+                        .from("@myorg/myapp")
+                        .type("JobMonitor")
                         .build())
                 //Mappe Property "abfrageId" auf "jobId"
-                .prop( CustomComponentProp.builder()
-                        .name( "abfrageId" )
-                        .mappingFeld( feldId )
-                        .build() )
-                .prop( CustomComponentProp.builder()
-                        .name( "anzeigeArt" )
-                        .mappingWert( "'compact'" )
-                        .build() )
+                .prop(CustomComponentProp.builder()
+                        .name("abfrageId")
+                        .mappingFeld(feldId)
+                        .build())
+                .prop(CustomComponentProp.builder()
+                        .name("anzeigeArt")
+                        .mappingWert("'compact'")
+                        .build())
                 .build();
         MaskeGridItems maske1 = MaskeGridItems.builder()
-                .titel( "DVV Nachtverarbeitung" )
-                .name( "einstellungnachtverarbeitung" )
+                .titel("DVV Nachtverarbeitung")
+                .name("einstellungnachtverarbeitung")
                 .url("/einstellungnachtverarbeitung")
-                .pfad( "01 Grundeinstellungen" ).pfad( "DVV Nachtverarbeitung" )
-                .entitaet( e1 ) //alle Entitäten bekannt machen
-                .element( aktiv )
-                .element( tabs )
-                .element( jobmonitor )
+                .pfad("01 Grundeinstellungen").pfad("DVV Nachtverarbeitung")
+                .entitaet(e1) //alle Entitäten bekannt machen
+                .element(aktiv)
+                .element(tabs)
+                .element(jobmonitor)
                 .build();
         UiModelReact ui = UiModelReact.builder()
-                .apiPagesFile( "J:\\temp\\generated\\api\\index.generated.ts" )
-                .maske( maske1 )
+                .apiPagesFile("J:\\temp\\generated\\api\\index.generated.ts")
+                .maske(maske1)
                 .build();
         DomainModel domain = DomainModel.builder()
 //                .entitaet(  ) //alle Entitäten bekannt machen
                 .build();
         LowCodeModel lcm = LowCodeModel.builder()
-                .ui( ui )
-                .domain( domain )
-                .anwendungskuerzel( "zeb" )
+                .ui(ui)
+                .domain(domain)
+                .anwendungskuerzel("zeb")
                 .build();
 
         // @formatter:on

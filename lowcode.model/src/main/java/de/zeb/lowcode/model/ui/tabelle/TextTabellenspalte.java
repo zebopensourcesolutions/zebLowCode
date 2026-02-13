@@ -21,10 +21,10 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class TextTabellenspalte extends AbstractTabellenspalte {
 
-    public final int     maxLaenge;
+    public final int maxLaenge;
     public final boolean multiline;
 
 }

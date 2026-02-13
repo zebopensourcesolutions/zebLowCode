@@ -26,8 +26,6 @@ public abstract class AbstractGenerator {
 
     public static final String LINE_SEPARATOR = "\r\n";
 
-    public abstract List<GeneratedFile> prepare(final LowCodeModel modell);
-
     /**
      * @param imports
      * @return
@@ -49,8 +47,10 @@ public abstract class AbstractGenerator {
 
     public static void appendLn(final StringBuilder sb, final String string) {
         sb.append(GeneratorUtils.normalizeLineBreaks(string));
-        sb.append(AbstractGenerator.LINE_SEPARATOR);
+        sb.append(LINE_SEPARATOR);
     }
+
+    public abstract List<GeneratedFile> prepare(final LowCodeModel modell);
 
     public void append(final StringBuilder sb, final String string) {
         sb.append(GeneratorUtils.normalizeLineBreaks(string));

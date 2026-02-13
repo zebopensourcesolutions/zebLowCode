@@ -21,13 +21,13 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class WertebereichTabellenspalte extends AbstractTabellenspalte {
+
+    public final Format format;
 
     public enum Format {
         DEFAULT, CURRENCY, CURRENCY_EUR, CURRENCY_EUR_MILLION, PERCENTAGE, BASISPUNKT, NONE
     }
-
-    public final Format format;
 
 }

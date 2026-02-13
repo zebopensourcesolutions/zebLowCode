@@ -10,11 +10,11 @@
 package de.zeb.lowcode.model.ui;
 
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 
 /**
@@ -24,8 +24,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Data
 public class UiModel<MASKEN_TYP extends Maske<?>> {
-    public final String           beschreibung;
-    @Singular( "maske" )
+    public final String beschreibung;
+    @Singular("maske")
     public final List<MASKEN_TYP> masken;
 
 }

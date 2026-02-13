@@ -12,7 +12,7 @@ public class Protokollierung implements ModelPart {
     private final static String PAKET = "protokollierung";
 
     public static Entitaet getDimInstitut() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -44,12 +44,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getDimElement() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -75,12 +74,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getDimUser() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -105,12 +103,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getDimKennzahl() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -134,12 +131,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getDimAktion() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -163,12 +159,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getDimDatum() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -262,12 +257,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getFactNutzungInhalt() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -374,12 +368,11 @@ public class Protokollierung implements ModelPart {
 
                 .build();
 
-        
 
     }
 
     public static Entitaet getFactNutzungAnwendung() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -440,12 +433,11 @@ public class Protokollierung implements ModelPart {
                         .build())
                 .build();
 
-        
 
     }
 
     public static Entitaet getFactEreignis() {
-        
+
         return Entitaet.builder()
                 .paket(PAKET)
 
@@ -549,13 +541,12 @@ public class Protokollierung implements ModelPart {
 
                 .build();
 
-        
 
     }
 
     @Override
     public void buildDomainModel(final DomainModelBuilder domain) {
-        
+
         domain.entitaet(getDimElement());
         domain.entitaet(getDimUser());
         domain.entitaet(getDimKennzahl());
@@ -565,7 +556,7 @@ public class Protokollierung implements ModelPart {
         domain.entitaet(getFactNutzungInhalt());
         domain.entitaet(getFactNutzungAnwendung());
         domain.entitaet(getFactEreignis());
-        
+
 
     }
 

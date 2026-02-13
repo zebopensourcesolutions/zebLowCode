@@ -27,13 +27,13 @@ public class WertebereichEintrag {
     @NonNull
     public final String label;
 
-    public WertebereichEintrag( final String nameAndValue, final String label ) {
+    public WertebereichEintrag(final String nameAndValue, final String label) {
         this.name = nameAndValue;
         this.value = nameAndValue;
         this.label = label;
     }
 
-    public WertebereichEintrag( final String name, final String value, final String label ) {
+    public WertebereichEintrag(final String name, final String value, final String label) {
         this.name = name;
         this.value = value;
         this.label = label;

@@ -15,11 +15,7 @@ import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.generator.model.JavaImport;
 import de.zeb.lowcode.model.LowCodeModel;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.Wertebereich;
-import de.zeb.lowcode.model.domain.WertebereichEintrag;
+import de.zeb.lowcode.model.domain.*;
 import de.zeb.lowcode.model.ui.Maske;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,6 +31,40 @@ import java.util.stream.Collectors;
 @SuppressWarnings("nls")
 public class FiJavaDomainGenerator extends AbstractJavaGenerator {
 
+    public static void generateHashcodeEquals(Maske entitaet, StringBuilder sb, Set<JavaImport> imports, String className) {
+        generateHashcodeEquals(entitaet.getParameterFelder(), sb, imports, className);
+    }
+
+    public static void generateHashcodeEquals(List<Entitaetsfeld> entitaetsFelder, StringBuilder sb, Set<JavaImport> imports, String className) {
+        if (!entitaetsFelder.isEmpty()) {
+            imports.add(JavaImport.builder()
+                    .from("java.util.Objects")
+                    .build());
+
+            String equalsString = entitaetsFelder.stream().map(feld -> "Objects.equals(get%s(), that.get%s())".formatted(feld.getNameCapitalized(), feld.getNameCapitalized())).collect(Collectors.joining(" && " + System.lineSeparator()));
+            String hashcodeString = entitaetsFelder.stream().map(feld -> "get%s()".formatted(feld.getNameCapitalized())).collect(Collectors.joining(","));
+            //Hashcode und Equals
+            appendLn(sb, """
+                    @Override
+                    public boolean equals(Object o) {
+                        if (this == o) {
+                            return true;
+                        }
+                        if (o == null || getClass() != o.getClass()) {
+                            return false;
+                        }
+                        %s that = (%s) o;
+                        return %s;
+                    }
+                    
+                    @Override
+                    public int hashCode() {
+                        return Objects.hash(%s);
+                    }
+                    """.formatted(className, className, equalsString, hashcodeString));
+        }
+    }
+
     @Override
     public List<GeneratedFile> prepare(final LowCodeModel lcm) {
 
@@ -49,15 +79,17 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
     private List<GeneratedFile> wertebereichEnumsErzeugen(final LowCodeModel domainModel) {
         List<GeneratedFile> results = new ArrayList<>();
         List<String> verarbeitet = new ArrayList<>();
-        for (Entitaet entitaet : domainModel.getDomain()
-                .getEntitaeten()) {
-            enumFuerEntitaetRekursivErzeugen(domainModel, results, entitaet, verarbeitet);
-        }
-        if (domainModel.getUi() != null) {
-            for (Maske<?> maske : domainModel.getUi()
-                    .getMasken()) {
-                enumFuerEntitaetRekursivErzeugen(domainModel, results, maske.getEntitaet(),
-                        verarbeitet);
+        if (domainModel.getDomain() != null) {
+            for (Entitaet entitaet : domainModel.getDomain()
+                    .getEntitaeten()) {
+                enumFuerEntitaetRekursivErzeugen(domainModel, results, entitaet, verarbeitet);
+            }
+            if (domainModel.getUi() != null) {
+                for (Maske<?> maske : domainModel.getUi()
+                        .getMasken()) {
+                    enumFuerEntitaetRekursivErzeugen(domainModel, results, maske.getEntitaet(),
+                            verarbeitet);
+                }
             }
         }
         return results;
@@ -139,42 +171,42 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
         String returnValue = StringUtils.capitalize(wertebereich.getName()) + "Enum";
 
         append(sb, """
-                    private final static Logger LOGGER = LoggerFactory.getLogger(REPLACE_RETURN_VALUE.class);
-                
-                    public static REPLACE_RETURN_VALUE findByLabel(String label) {
-                        if (StringUtils.isEmpty(label)) {
-                                return null;
-                        }
-                        return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.getLabel().equals(label.trim())).findFirst()
-                                .orElseGet(() -> {
-                                    LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", label);
-                                    return UNBEKANNT;
-                                });
-                    }
-                
-                    public static REPLACE_RETURN_VALUE findByValue(String value) {
-                        if (StringUtils.isEmpty(value)) {
-                                return null;
-                        }
-                        return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.getValue().equalsIgnoreCase(value.trim())).findFirst()
-                                .orElseGet(() -> {
-                                    LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", value);
-                                    return UNBEKANNT;
-                                });
-                    }
-                    
-                    public static REPLACE_RETURN_VALUE findByName(String name) {
-                        if (StringUtils.isEmpty(name)) {
-                                return null;
-                        }
-                        return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.name().equalsIgnoreCase(name.trim())).findFirst()
-                                .orElseGet(() -> {
-                                    LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", name);
-                                    return UNBEKANNT;
-                                });
-                    }
-                }
-                """.replaceAll("REPLACE_RETURN_VALUE", returnValue).indent(4));
+                     private final static Logger LOGGER = LoggerFactory.getLogger(REPLACE_RETURN_VALUE.class);
+                \s
+                     public static REPLACE_RETURN_VALUE findByLabel(String label) {
+                         if (StringUtils.isEmpty(label)) {
+                                 return null;
+                         }
+                         return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.getLabel().equals(label.trim())).findFirst()
+                                 .orElseGet(() -> {
+                                     LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", label);
+                                     return UNBEKANNT;
+                                 });
+                     }
+                \s
+                     public static REPLACE_RETURN_VALUE findByValue(String value) {
+                         if (StringUtils.isEmpty(value)) {
+                                 return null;
+                         }
+                         return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.getValue().equalsIgnoreCase(value.trim())).findFirst()
+                                 .orElseGet(() -> {
+                                     LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", value);
+                                     return UNBEKANNT;
+                                 });
+                     }
+                    \s
+                     public static REPLACE_RETURN_VALUE findByName(String name) {
+                         if (StringUtils.isEmpty(name)) {
+                                 return null;
+                         }
+                         return Arrays.stream(REPLACE_RETURN_VALUE.values()).filter(f -> f.name().equalsIgnoreCase(name.trim())).findFirst()
+                                 .orElseGet(() -> {
+                                     LOGGER.error("Enum für Wert {} konnte nicht ermittelt werden!", name);
+                                     return UNBEKANNT;
+                                 });
+                     }
+                 }
+                \s""".replaceAll("REPLACE_RETURN_VALUE", returnValue).indent(4));
 
         String content = sb.toString();
         String importStatements = javaImportStatementsErzeugen(imports);
@@ -186,12 +218,14 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
     private List<GeneratedFile> modellErzeugen(final LowCodeModel modell) {
         List<GeneratedFile> results = new ArrayList<>();
 
-        for (Entitaet entitaet : modell.getDomain()
-                .getEntitaeten()) {
-            if (entitaet.isEigenstaendig()) {
-                modelFuerEntitaetErzeugen(modell, results, entitaet, true);
+        if (modell.getDomain() != null) {
+            for (Entitaet entitaet : modell.getDomain()
+                    .getEntitaeten()) {
+                if (entitaet.isEigenstaendig()) {
+                    modelFuerEntitaetErzeugen(modell, results, entitaet, true);
+                }
+                modelFuerEntitaetErzeugen(modell, results, entitaet, false);
             }
-            modelFuerEntitaetErzeugen(modell, results, entitaet, false);
         }
         return results;
     }
@@ -209,8 +243,7 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
         GeneratedFileBuilder generatedFileBuilder = klasseGenErzeugen(modell, packageFolder,
                 "domain", StringUtils.capitalize(entitaet.getName()) + (reference ? "Reference.java" : ".java"));
 
-        Set<JavaImport> imports = new HashSet<>();
-        imports.addAll(variablenDefinitionErzeugen(modell.getAnwendungskuerzel(), entitaet, sb,
+        Set<JavaImport> imports = new HashSet<>(variablenDefinitionErzeugen(modell.getAnwendungskuerzel(), entitaet, sb,
                 modell.getDomain(), reference));
 
         String content = sb.toString();
@@ -220,7 +253,6 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
                 .build());
 
     }
-
 
     private Set<JavaImport> variablenDefinitionErzeugen(final String shortApplicationName,
                                                         final Entitaet entitaet, final StringBuilder sb, final DomainModel modell, boolean reference) {
@@ -434,40 +466,6 @@ public class FiJavaDomainGenerator extends AbstractJavaGenerator {
             }
         }
 
-    }
-
-    public static void generateHashcodeEquals(Maske entitaet, StringBuilder sb, Set<JavaImport> imports, String className) {
-        generateHashcodeEquals(entitaet.getParameterFelder(), sb, imports, className);
-    }
-
-    public static void generateHashcodeEquals(List<Entitaetsfeld> entitaetsFelder, StringBuilder sb, Set<JavaImport> imports, String className) {
-        if (!entitaetsFelder.isEmpty()) {
-            imports.add(JavaImport.builder()
-                    .from("java.util.Objects")
-                    .build());
-
-            String equalsString = entitaetsFelder.stream().map(feld -> "Objects.equals(get%s(), that.get%s())".formatted(feld.getNameCapitalized(), feld.getNameCapitalized())).collect(Collectors.joining(" && " + System.lineSeparator()));
-            String hashcodeString = entitaetsFelder.stream().map(feld -> "get%s()".formatted(feld.getNameCapitalized())).collect(Collectors.joining(","));
-            //Hashcode und Equals
-            appendLn(sb, """
-                    @Override
-                    public boolean equals(Object o) {
-                        if (this == o) {
-                            return true;
-                        }
-                        if (o == null || getClass() != o.getClass()) {
-                            return false;
-                        }
-                        %s that = (%s) o;
-                        return %s;
-                    }
-                    
-                    @Override
-                    public int hashCode() {
-                        return Objects.hash(%s);
-                    }
-                    """.formatted(className, className, equalsString, hashcodeString));
-        }
     }
 
 }

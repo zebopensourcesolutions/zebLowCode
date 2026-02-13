@@ -10,11 +10,11 @@
 package de.zeb.lowcode.model;
 
 
-import java.util.List;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+
+import java.util.List;
 
 
 /**
@@ -24,9 +24,9 @@ import lombok.Singular;
 @Builder
 @Data
 public class TypescriptImport {
-    public final String       defaultType;
-    @Singular( "type" )
+    public final String defaultType;
+    @Singular("type")
     public final List<String> types;
-    public final String       from;
+    public final String from;
 
 }

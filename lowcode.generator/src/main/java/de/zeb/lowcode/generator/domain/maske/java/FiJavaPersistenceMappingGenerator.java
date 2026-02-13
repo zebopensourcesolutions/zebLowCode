@@ -14,7 +14,6 @@ import de.zeb.lowcode.generator.domain.GeneratorUtils;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.generator.model.JavaImport;
-
 import de.zeb.lowcode.generator.persistenz.NumberIdEntitaetsfeld;
 import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.domain.DomainModel;
@@ -183,16 +182,16 @@ public class FiJavaPersistenceMappingGenerator extends AbstractJavaGenerator {
                         append(mapKey, """
                                 pk.set%s(domainModell.get%s());""".indent(8)
                                 .formatted(feld.getNameCapitalized(), feld.getNameCapitalized()));
-                        append(mapFromPO, feldInReferenz ? mapFromPOReference : null, """
+                        append(mapFromPO, mapFromPOReference, """
                                 builder.%s(dbModell.getId().get%s());""".indent(8)
                                 .formatted(feld.getNameUncapitalized(), feld.getNameCapitalized()));
                     } else if (feld.alsListe) {
                         var getterDomain = "domainModell.get%s()".formatted(feld.getNameCapitalized());
                         var getterDb = "dbModell.get%s()".formatted(feld.getNameCapitalized());
-                        append(mapToPO, feldInReferenz ? mapToPOReference : null, """
+                        append(mapToPO, mapToPOReference, """
                                 dbModell.set%s(%s != null ? new ArrayList<>(%s) : null);""".indent(8)
                                 .formatted(feld.getNameCapitalized(), getterDomain, getterDomain));
-                        append(mapFromPO, feldInReferenz ? mapFromPOReference : null, """
+                        append(mapFromPO, mapFromPOReference, """
                                 builder.%s(%s != null ? new ArrayList<>(%s) : null);""".indent(8)
                                 .formatted(feld.getNameUncapitalized(), getterDb, getterDb));
                     } else {
@@ -202,7 +201,7 @@ public class FiJavaPersistenceMappingGenerator extends AbstractJavaGenerator {
                                     .from(getWertebereichPackage(shortApplicationName, feld.getWertebereich()) + "."
                                             + feld.getWertebereich().getNameCapitalized() + "Enum")
                                     .build());
-                            append(mapToPO, feldInReferenz ? mapToPOReference : null, """
+                            append(mapToPO, mapToPOReference, """
                                     if(domainModell.get%s() == null) {
                                          dbModell.set%s(null);
                                     } else if (%s.UNBEKANNT.equals(domainModell.get%s())) {
@@ -212,14 +211,14 @@ public class FiJavaPersistenceMappingGenerator extends AbstractJavaGenerator {
                                     }
                                     """.indent(8)
                                     .formatted(feld.getNameCapitalized(), feld.getNameCapitalized(), enumKey, feld.getNameCapitalized(), feld.getNameCapitalized(), feld.getNameCapitalized()));
-                            append(mapFromPO, feldInReferenz ? mapFromPOReference : null, """
+                            append(mapFromPO, mapFromPOReference, """
                                     builder.%s(%s.findByName(dbModell.get%s()));""".indent(8)
                                     .formatted(feld.getNameUncapitalized(), enumKey, feld.getNameCapitalized()));
                         } else {
-                            append(mapToPO, feldInReferenz ? mapToPOReference : null, """
+                            append(mapToPO, mapToPOReference, """
                                     dbModell.set%s(domainModell.get%s());""".indent(8)
                                     .formatted(feld.getNameCapitalized(), feld.getNameCapitalized()));
-                            append(mapFromPO, feldInReferenz ? mapFromPOReference : null, """
+                            append(mapFromPO, mapFromPOReference, """
                                     builder.%s(dbModell.get%s());""".indent(8)
                                     .formatted(feld.getNameUncapitalized(), feld.getNameCapitalized()));
                         }
@@ -365,14 +364,10 @@ public class FiJavaPersistenceMappingGenerator extends AbstractJavaGenerator {
         StringBuilder mapKey = new StringBuilder();
 
         for (Entitaetsfeld feld : entitaet.getFelderMitVererbung(modell)) {
-            if (feld.isPersistenz()) {
-                if (feld.getZielEntitaet() == null) {
-                    if (feld.isPk()) {
-                        append(mapKey, """
-                                pk.set%s(domainModell.get%s());""".indent(8)
-                                .formatted(feld.getNameCapitalized(), feld.getNameCapitalized()));
-                    }
-                }
+            if (feld.isPersistenz() && feld.getZielEntitaet() == null && feld.isPk()) {
+                append(mapKey, """
+                        pk.set%s(domainModell.get%s());""".indent(8)
+                        .formatted(feld.getNameCapitalized(), feld.getNameCapitalized()));
             }
         }
         if (mapKey.isEmpty()) {

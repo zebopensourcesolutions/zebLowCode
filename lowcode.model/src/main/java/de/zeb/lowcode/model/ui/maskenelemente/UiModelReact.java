@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class UiModelReact extends UiModel<MaskeGridItems> {
     @NonNull
     public final String apiPagesFile;

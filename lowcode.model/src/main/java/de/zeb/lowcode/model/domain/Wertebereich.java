@@ -10,14 +10,13 @@
 package de.zeb.lowcode.model.domain;
 
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.Singular;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 
 /**
@@ -28,16 +27,16 @@ import lombok.Singular;
 @Builder
 public class Wertebereich {
     @NonNull
-    public final String                    name;
-    @Singular( "eintrag" )
+    public final String name;
+    @Singular("eintrag")
     public final List<WertebereichEintrag> eintraege;
-    public final String                    paket;
+    public final String paket;
 
     public String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
+        return StringUtils.capitalize(getName());
     }
 
     public String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
+        return StringUtils.uncapitalize(getName());
     }
 }

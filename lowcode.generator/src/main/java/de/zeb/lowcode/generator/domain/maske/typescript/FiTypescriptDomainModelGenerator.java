@@ -15,11 +15,7 @@ import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.TypescriptImport;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.Wertebereich;
-import de.zeb.lowcode.model.domain.WertebereichEintrag;
+import de.zeb.lowcode.model.domain.*;
 import de.zeb.lowcode.model.ui.Maske;
 import org.apache.commons.lang3.StringUtils;
 
@@ -395,9 +391,9 @@ public class FiTypescriptDomainModelGenerator extends AbstractTypescriptGenerato
         typeGuardFuerEntitaetsfeld(sb, imports, entitaet, domain, referenz, true);
         appendLn(sb, """
                 };
-
+                
                 export const is%s  = conformsTo(%sSpec);
-
+                
                 """.formatted(zielTyp, zielTyp));
 
         return imports;

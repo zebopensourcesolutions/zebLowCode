@@ -10,7 +10,6 @@
  */
 package de.zeb.lowcode.generator.domain.maske.java;
 
-import de.zeb.lowcode.generator.domain.AbstractGenerator;
 import de.zeb.lowcode.generator.domain.GeneratorUtils;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
@@ -39,7 +38,7 @@ public class FiJavaMaskenModellGenerator extends AbstractJavaGenerator {
 
     private List<GeneratedFile> modellErzeugen(final LowCodeModel modell) {
         List<GeneratedFile> results = new ArrayList<>();
-        if (modell.getUi()!=null) {
+        if (modell.getUi() != null) {
             for (Maske<?> maske : modell.getUi()
                     .getMasken()) {
                 if (!GeneratorUtils.entityForMaskIsPartOfDomain(maske, modell.getDomain())) {
@@ -55,8 +54,8 @@ public class FiJavaMaskenModellGenerator extends AbstractJavaGenerator {
                                         final List<GeneratedFile> results, final Maske<?> maske) {
         StringBuilder sb = new StringBuilder();
         String packageLine = "package example." + modell.getAnwendungskuerzel() + "."
-                + maske.getName().toLowerCase() + ".model" + ";" + AbstractGenerator.LINE_SEPARATOR
-                + AbstractGenerator.LINE_SEPARATOR;
+                + maske.getName().toLowerCase() + ".model" + ";" + LINE_SEPARATOR
+                + LINE_SEPARATOR;
         GeneratedFileBuilder generatedFileBuilder = GeneratedFile.builder()
                 .folder("src/gen/java/example/" + modell.getAnwendungskuerzel() + "/"
                         + maske.getName().toLowerCase() + "/model/")
@@ -85,7 +84,7 @@ public class FiJavaMaskenModellGenerator extends AbstractJavaGenerator {
                 .from("lombok.extern.jackson.Jacksonized")
                 .build());
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *

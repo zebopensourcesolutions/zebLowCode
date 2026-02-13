@@ -10,11 +10,11 @@
 package de.zeb.lowcode.generator.model;
 
 
-import java.util.List;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+
+import java.util.List;
 
 
 /**
@@ -24,6 +24,7 @@ import lombok.Singular;
 @Builder
 @Data
 public class JavaImport {
-    @Singular( "from" )
+    @Singular("from")
     public final List<String> imports;
+
 }

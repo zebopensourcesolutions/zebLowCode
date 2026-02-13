@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractTabellenspalte extends MaskenelementMitFeld implements Tabellenspalte {
 
     // In Pixel
@@ -33,7 +33,7 @@ public abstract class AbstractTabellenspalte extends MaskenelementMitFeld implem
     public final Integer maxWidth;
 
     @Builder.Default
-    public final boolean visible  = true;
+    public final boolean visible = true;
 
     @Builder.Default
     public final boolean editable = true;
@@ -42,7 +42,7 @@ public abstract class AbstractTabellenspalte extends MaskenelementMitFeld implem
     public final boolean sortable = true;
 
     @Builder.Default
-    public final boolean rowDrag  = false;
+    public final boolean rowDrag = false;
 
     @Override
     public String getName() {

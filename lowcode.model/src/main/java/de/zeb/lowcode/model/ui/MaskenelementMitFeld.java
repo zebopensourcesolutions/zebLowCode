@@ -22,12 +22,12 @@ import lombok.experimental.SuperBuilder;
  *
  */
 @SuperBuilder
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 @Data
 public abstract class MaskenelementMitFeld extends Maskenelement implements MaskenelementMitFeldIf {
     @NonNull
     // Hier wird bei "onChange" hineingeschrieben und normalerweise auch draus gelesen
     public final Entitaetsfeld feld;
-    public final String        label;
+    public final String label;
 
 }

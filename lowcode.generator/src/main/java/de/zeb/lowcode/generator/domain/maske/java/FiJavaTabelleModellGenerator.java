@@ -10,7 +10,6 @@
  */
 package de.zeb.lowcode.generator.domain.maske.java;
 
-import de.zeb.lowcode.generator.domain.AbstractGenerator;
 import de.zeb.lowcode.generator.domain.GeneratorUtils;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
@@ -78,7 +77,7 @@ public class FiJavaTabelleModellGenerator extends AbstractJavaGenerator {
 
     private String getPackageLine(final String maskenName, final String shortApplicationName) {
         return "package example." + shortApplicationName + "." + maskenName + ".model"
-                + ";" + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + ";" + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     private Set<JavaImport> variablenDefinitionErzeugen(final String shortApplicationName,
@@ -100,7 +99,7 @@ public class FiJavaTabelleModellGenerator extends AbstractJavaGenerator {
         getModelImport(shortApplicationName, zielentitaet, imports, entitaet);
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *

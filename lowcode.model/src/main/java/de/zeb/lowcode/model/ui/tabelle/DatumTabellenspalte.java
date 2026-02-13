@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class DatumTabellenspalte extends AbstractTabellenspalte {
 
 }

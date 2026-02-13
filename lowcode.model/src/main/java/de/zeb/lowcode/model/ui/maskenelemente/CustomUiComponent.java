@@ -10,8 +10,6 @@
 package de.zeb.lowcode.model.ui.maskenelemente;
 
 
-import java.util.List;
-
 import de.zeb.lowcode.model.TypescriptImport;
 import de.zeb.lowcode.model.ui.MaskenelementMitFeld;
 import lombok.Data;
@@ -20,20 +18,22 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 
 /**
  * @author dkleine
  *
  */
 @SuperBuilder
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CustomUiComponent extends MaskenelementMitFeld {
 
     @NonNull
-    public final TypescriptImport          tsImport;
+    public final TypescriptImport tsImport;
     @NonNull
-    public final String                    component;
+    public final String component;
     @Singular
     public final List<CustomComponentProp> props;
 

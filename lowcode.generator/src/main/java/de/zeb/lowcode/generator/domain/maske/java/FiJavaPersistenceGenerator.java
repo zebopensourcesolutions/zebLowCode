@@ -22,11 +22,7 @@ import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.domain.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("nls")
@@ -254,7 +250,7 @@ public class FiJavaPersistenceGenerator extends AbstractJavaGenerator {
                     @GeneratedValue(strategy = GenerationType.IDENTITY)
                     @Column(name = "%s")
                     @Getter @Setter private Integer id;""".indent(4)
-                    .formatted(numberPKFelder.get(0).getDbSpaltenname()));
+                    .formatted(numberPKFelder.getFirst().getDbSpaltenname()));
 
         }
 
@@ -367,6 +363,7 @@ public class FiJavaPersistenceGenerator extends AbstractJavaGenerator {
                                     @OneToMany(%s)"""
                                     .indent(4)
                                     .formatted(cascadeFetchString));
+                            assert pkSpaltenname != null;
                             append(sb, "@JoinColumn(name=\"" + pkSpaltenname.toUpperCase() + "\")");
                         } else {
                             String joinTableSuffix = "";
@@ -599,11 +596,11 @@ public class FiJavaPersistenceGenerator extends AbstractJavaGenerator {
 
     private boolean erbtJemandVonDieserEntitaet(final Entitaet entitaet, final DomainModel modell) {
         for (Entitaet e : modell.getEntitaeten()) {
-            if ((e.getErbtVon() != null) && (StringUtils.equals(e.getErbtVon()
+            if (e.getErbtVon() != null && StringUtils.equals(e.getErbtVon()
                     .getName(), entitaet.getName()) && StringUtils.equals(
                     e.getErbtVon()
                             .getPaket(),
-                    entitaet.getPaket()))) {
+                    entitaet.getPaket())) {
                 return true;
             }
         }
@@ -633,6 +630,7 @@ public class FiJavaPersistenceGenerator extends AbstractJavaGenerator {
             if (ef.feld()
                     .isPk()) {
                 fehlenderPk = false;
+                break;
             }
         }
         if (fehlenderPk) {
@@ -653,8 +651,8 @@ public class FiJavaPersistenceGenerator extends AbstractJavaGenerator {
         if (e.getErbtVon() == null) {
             return e;
         }
-
-        return getTopSuper(lcm.getEntitaeten().stream().filter(e2 -> e2.getName().equals(e.getErbtVon().getName())).findFirst().get(), lcm);
+        Optional<Entitaet> entitaet = lcm.getEntitaeten().stream().filter(e2 -> e2.getName().equals(e.getErbtVon().getName())).findFirst();
+        return entitaet.map(value -> getTopSuper(value, lcm)).orElse(null);
     }
 
 }

@@ -17,11 +17,7 @@ import de.zeb.lowcode.generator.model.JavaImport;
 import de.zeb.lowcode.generator.persistenz.IdEntitaetsfeld;
 import de.zeb.lowcode.generator.persistenz.NumberIdEntitaetsfeld;
 import de.zeb.lowcode.model.LowCodeModel;
-import de.zeb.lowcode.model.domain.Datentyp;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetreferenz;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
+import de.zeb.lowcode.model.domain.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -128,53 +124,49 @@ public class FiJavaPersistencePkGenerator extends AbstractJavaGenerator {
                         typ = feld.getWertebereich()
                                 .getNameCapitalized() + "Enum";
                     }
-                    if (!feld.isAlsListe()) {
-                        if (feld.getDatenTyp()
-                                .equals(Datentyp.ID)) {
-                            if (!feld.isFachlichEindeutig()) {
-                                if (feld instanceof IdEntitaetsfeld) {
-                                    imports.add(JavaImport.builder()
-                                            .from("jakarta.persistence.GeneratedValue")
-                                            .from("org.hibernate.annotations.GenericGenerator")
-                                            .from("example.myapp.MyappIdGenerator")
-                                            .build());
-                                    append(felderBuilder,
-                                            """
-                                                                @GenericGenerator(name = "MYAPP_ID", type = MyappIdGenerator.class)
-                                                                @GeneratedValue(generator = "MYAPP_ID")
-                                                    """);
-                                } else {
-                                    imports.add(JavaImport.builder()
-                                            .from("jakarta.persistence.GeneratedValue")
-                                            .from("org.hibernate.annotations.UuidGenerator")
-                                            .from("org.hibernate.annotations.UuidGenerator.Style")
-                                            .build());
-                                    append(felderBuilder, """
-                                                    @GeneratedValue
-                                                    @UuidGenerator(style = Style.TIME)
+                    if (!feld.isAlsListe() && feld.getDatenTyp().equals(Datentyp.ID) && !feld.isFachlichEindeutig()) {
+                        if (feld instanceof IdEntitaetsfeld) {
+                            imports.add(JavaImport.builder()
+                                    .from("jakarta.persistence.GeneratedValue")
+                                    .from("org.hibernate.annotations.GenericGenerator")
+                                    .from("example.myapp.MyappIdGenerator")
+                                    .build());
+                            append(felderBuilder,
+                                    """
+                                                        @GenericGenerator(name = "MYAPP_ID", type = MyappIdGenerator.class)
+                                                        @GeneratedValue(generator = "MYAPP_ID")
                                             """);
-                                }
-                            }
-                        }
-                        imports.add(JavaImport.builder()
-                                .from("jakarta.persistence.Column")
-                                .build());
-                        if (feld.getWertebereich() != null) {
+                        } else {
+                            imports.add(JavaImport.builder()
+                                    .from("jakarta.persistence.GeneratedValue")
+                                    .from("org.hibernate.annotations.UuidGenerator")
+                                    .from("org.hibernate.annotations.UuidGenerator.Style")
+                                    .build());
                             append(felderBuilder, """
-                                    @Enumerated(EnumType.STRING) 
+                                            @GeneratedValue
+                                            @UuidGenerator(style = Style.TIME)
                                     """);
                         }
-                        append(felderBuilder, """
-                                    @Column(name = "%s")
-                                """.formatted(feld.getDbSpaltenname()));
-
-                        append(felderBuilder, """
-                                private %s %s;""".indent(4)
-                                .formatted(typ, feld.getName()));
                     }
+                    imports.add(JavaImport.builder()
+                            .from("jakarta.persistence.Column")
+                            .build());
+                    if (feld.getWertebereich() != null) {
+                        append(felderBuilder, """
+                                @Enumerated(EnumType.STRING)\s
+                               \s""");
+                    }
+                    append(felderBuilder, """
+                                @Column(name = "%s")
+                            """.formatted(feld.getDbSpaltenname()));
+
+                    append(felderBuilder, """
+                            private %s %s;""".indent(4)
+                            .formatted(typ, feld.getName()));
                 }
             }
         }
+
         imports.add(JavaImport.builder()
                 .from("lombok.Builder")
                 .from("lombok.Getter")
@@ -183,7 +175,7 @@ public class FiJavaPersistencePkGenerator extends AbstractJavaGenerator {
                 .build());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *
@@ -209,7 +201,7 @@ public class FiJavaPersistencePkGenerator extends AbstractJavaGenerator {
         appendLn(sb, """
                 @Embeddable
                 public class %sPK implements Serializable {
-
+                
                 private static final long serialVersionUID = 1L;
                 """.formatted(entitaet.getNameCapitalized()));
         sb.append(felderBuilder);

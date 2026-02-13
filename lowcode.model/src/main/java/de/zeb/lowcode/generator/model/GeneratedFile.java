@@ -30,6 +30,10 @@ public class GeneratedFile {
     public final String content;
 
     public boolean isGenerated() {
-        return this.folder.contains( "/generated" ) || this.folder.contains( "/gen/" ); //$NON-NLS-1$ //$NON-NLS-2$
+        return this.folder.contains("/generated") || this.folder.contains("/gen/"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public String getRelativePath() {
+        return this.folder + "/" + this.file; //$NON-NLS-1$
     }
 }

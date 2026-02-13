@@ -19,13 +19,8 @@ import de.zeb.lowcode.model.domain.Entitaetsfeld;
 import de.zeb.lowcode.model.domain.Wertebereich;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +28,38 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("nls")
 public abstract class AbstractTypescriptGenerator extends AbstractGenerator {
+
+    protected static String getDefaultwert(final Entitaetsfeld feld) {
+        switch (feld.getDatenTyp()) {
+            case BOOLEAN:
+                return "true";
+            case ZAHL:
+            case PROZENTZAHL:
+            case GELD_BETRAG:
+                return "'0'";
+            case GANZZAHL:
+            case GANZZAHL_ERWEITERT:
+            case BASISPUNKT:
+            case VERSION:
+                return "0";
+            case ZEITSTEMPEL:
+            case ZEITPUNKT_LETZTE_AENDERUNG:
+            case MODIFIZIERT_VON:
+            case ERSTELLT_VON:
+            case ZEITPUNKT_ERSTELLUNG:
+            case TEXT:
+            case ID:
+            case URL:
+            case DATUM:
+            case BINARY:
+                return "''";
+            case TEXT_JN:
+                return "'J'";
+            default:
+
+        }
+        return "undefined";
+    }
 
     protected void importErgaenzen(final Collection<TypescriptImport> imports,
                                    final Entitaet entitaet, final TypescriptLocation location, final TypImport tsImport) {
@@ -156,13 +183,12 @@ public abstract class AbstractTypescriptGenerator extends AbstractGenerator {
             Entitaet zielEntitaet = domain
                     .getEntitaetByReference(entitaetsfeld.getZielEntitaet());
 
-            if (!zielIdentischMitQuelle) {
-                if (!nurReferenzFelderGenerieren || !(entitaetsfeld.isAlsTabelle() || entitaetsfeld.isAlsListe())) {
-                    if (zielEntitaet.isEigenstaendig() && useReference) {
-                        importTypReferenceAusScreenGenErgaenzen(imports, zielEntitaet);
-                    } else {
-                        importTypAusScreenGenErgaenzen(imports, zielEntitaet);
-                    }
+            if (!zielIdentischMitQuelle &&
+                    (!nurReferenzFelderGenerieren || !(entitaetsfeld.isAlsTabelle() || entitaetsfeld.isAlsListe()))) {
+                if (zielEntitaet.isEigenstaendig() && useReference) {
+                    importTypReferenceAusScreenGenErgaenzen(imports, zielEntitaet);
+                } else {
+                    importTypAusScreenGenErgaenzen(imports, zielEntitaet);
                 }
             }
 
@@ -464,38 +490,6 @@ public abstract class AbstractTypescriptGenerator extends AbstractGenerator {
 
         }
         return pathPrefix + suffix;
-    }
-
-    protected static String getDefaultwert(final Entitaetsfeld feld) {
-        switch (feld.getDatenTyp()) {
-            case BOOLEAN:
-                return "true";
-            case ZAHL:
-            case PROZENTZAHL:
-            case GELD_BETRAG:
-                return "'0'";
-            case GANZZAHL:
-            case GANZZAHL_ERWEITERT:
-            case BASISPUNKT:
-            case VERSION:
-                return "0";
-            case ZEITSTEMPEL:
-            case ZEITPUNKT_LETZTE_AENDERUNG:
-            case MODIFIZIERT_VON:
-            case ERSTELLT_VON:
-            case ZEITPUNKT_ERSTELLUNG:
-            case TEXT:
-            case ID:
-            case URL:
-            case DATUM:
-            case BINARY:
-                return "''";
-            case TEXT_JN:
-                return "'J'";
-            default:
-
-        }
-        return "undefined";
     }
 
 }

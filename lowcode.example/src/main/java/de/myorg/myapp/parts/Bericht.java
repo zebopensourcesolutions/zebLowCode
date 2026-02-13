@@ -86,7 +86,7 @@ public class Bericht implements ModelPart {
 
     @Override
     public void buildDomainModel(final DomainModelBuilder domain) {
-        
+
         Entitaet abfrage = getBericht();
         domain.entitaet(abfrage);
     }

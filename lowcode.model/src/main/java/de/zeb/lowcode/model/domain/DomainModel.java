@@ -10,14 +10,12 @@
 package de.zeb.lowcode.model.domain;
 
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import org.apache.commons.lang3.Strings;
+
+import java.util.List;
 
 
 /**
@@ -27,15 +25,13 @@ import org.apache.commons.lang3.Strings;
 @Builder
 @Data
 public class DomainModel {
-    @Singular( "entitaet" )
+    @Singular("entitaet")
     public final List<Entitaet> entitaeten;
 
-    public Entitaet getEntitaetByReference( final Entitaetreferenz referenz ) {
-        for ( Entitaet entitaet : getEntitaeten() ) {
-            if ( entitaet.getName().equals( referenz.getName() ) ) {
-                if ( Strings.CS.equals( entitaet.getPaket(), referenz.getPaket() ) ) {
-                    return entitaet;
-                }
+    public Entitaet getEntitaetByReference(final Entitaetreferenz referenz) {
+        for (Entitaet entitaet : getEntitaeten()) {
+            if (entitaet.getName().equals(referenz.getName()) && Strings.CS.equals(entitaet.getPaket(), referenz.getPaket())) {
+                return entitaet;
             }
         }
         return null;

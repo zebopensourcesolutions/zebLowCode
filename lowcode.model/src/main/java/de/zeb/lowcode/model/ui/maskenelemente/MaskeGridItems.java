@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
  *
  */
 @SuperBuilder
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class MaskeGridItems extends Maske<MaskenelementIf> {
 

@@ -26,8 +26,8 @@ public class Entitaetreferenz implements EntitaetreferenzIf {
     public final String name;
     public final String paket;
     @Builder.Default
-    public final 				  FetchType fetchType = FetchType.DEFAULT;
+    public final FetchType fetchType = FetchType.DEFAULT;
     @Builder.Default
-    public final 				  CascadeType cascadeType = CascadeType.DEFAULT;
+    public final CascadeType cascadeType = CascadeType.DEFAULT;
 
 }

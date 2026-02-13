@@ -13,12 +13,9 @@ package de.zeb.lowcode.generator.domain.maske.java;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.generator.model.JavaImport;
-
 import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.domain.DomainModel;
 import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.EntitaetsfeldMitEntitaet;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -125,109 +122,109 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                         import java.util.List;
                         import java.util.Optional;
                         import java.util.function.Function;
-
+                        
                         import org.springframework.data.domain.Example;
                         import org.springframework.data.domain.Page;
                         import org.springframework.data.domain.Pageable;
                         import org.springframework.data.domain.Sort;
                         import org.springframework.data.jpa.repository.JpaRepository;
                         import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
-
+                        
                         class DbElementRepositoryGen implements JpaRepository<DbElement, DbElementReference> {
-
+                        
                             private final DbElementPoRepository repo;
-
+                        
                             public DbElementRepositoryGen(final DbElementPoRepository repo) {
                                 super();
                                 this.repo = repo;
                             }
-
+                        
                             protected DbElementPoRepository getRepo() {
                                 return this.repo;
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> List<S> saveAll(final Iterable<S> entities) {
                                 return (List<S>) DbElementMapper
                                         .mapFromPO(this.repo.saveAll(DbElementMapper.mapToPO(entities)));
                             }
-                            
+                        
                             public <S extends DbElement> List<DbElementPO> saveAllWithoutMapping(final Iterable<S> entities) {
                                 return this.repo.saveAll(DbElementMapper.mapToPO(entities));
                             }
-
+                        
                             @Override
                             public List<DbElement> findAll() {
                                 return DbElementMapper.mapFromPO(this.repo.findAll());
                             }
-
+                        
                             @Override
                             public List<DbElement> findAllById(final Iterable<DbElementReference> ids) {
                                 return DbElementMapper.mapFromPO(this.repo.findAllById(DbElementMapper.mapToPKs(ids)));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> S save(final S entity) {
                                 return (S) DbElementMapper.mapFromPO(this.repo.save(DbElementMapper.mapToPO(entity)));
                             }
-                            
+                        
                             public <S extends DbElement> DbElementPO saveWithoutMapping(final S entity) {
                                 return this.repo.save(DbElementMapper.mapToPO(entity));
                             }
-
+                        
                             @Override
                             public Optional<DbElement> findById(final DbElementReference id) {
                                 return DbElementMapper.mapFromPO(this.repo.findById(DbElementMapper.mapToPK(id)));
                             }
-
+                        
                             @Override
                             public boolean existsById(final DbElementReference id) {
                                 return this.repo.existsById(DbElementMapper.mapToPK(id));
                             }
-
+                        
                             @Override
                             public long count() {
                                 return this.repo.count();
                             }
-
+                        
                             @Override
                             public void deleteById(final DbElementReference id) {
                                 this.repo.deleteById(DbElementMapper.mapToPK(id));
                             }
-
+                        
                             @Override
                             public void delete(final DbElement entity) {
                                 this.repo.delete(DbElementMapper.mapToPO(entity));
                             }
-
+                        
                             @Override
                             public void deleteAllById(final Iterable<? extends DbElementReference> ids) {
                                 this.repo.deleteAllById(DbElementMapper.mapToPKs(ids));
                             }
-
+                        
                             @Override
                             public void deleteAll(final Iterable<? extends DbElement> entities) {
                                 this.repo.deleteAll(DbElementMapper.mapToPO(entities));
                             }
-
+                        
                             @Override
                             public void deleteAll() {
                                 this.repo.deleteAll();
                             }
-
+                        
                             @Override
                             public List<DbElement> findAll(final Sort sort) {
                                 return DbElementMapper.mapFromPO(this.repo.findAll(sort));
                             }
-
+                        
                             @Override
                             public Page<DbElement> findAll(final Pageable pageable) {
                                 Page<DbElementPO> page = this.repo.findAll(pageable);
                                 return page.map(e -> DbElementMapper.mapFromPO(e));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> Optional<S> findOne(final Example<S> example) {
@@ -235,7 +232,7 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                                         example.getMatcher());
                                 return (Optional<S>) DbElementMapper.mapFromPO(this.repo.findOne(examplePO));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> Page<S> findAll(final Example<S> example,
@@ -246,21 +243,21 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                                 Page<DbElement> mappedPage = page.map(e -> DbElementMapper.mapFromPO(e));
                                 return (Page<S>) mappedPage;
                             }
-
+                        
                             @Override
                             public <S extends DbElement> long count(final Example<S> example) {
                                 Example<DbElementPO> examplePO = Example.of(DbElementMapper.mapToPO(example.getProbe()),
                                         example.getMatcher());
                                 return this.repo.count(examplePO);
                             }
-
+                        
                             @Override
                             public <S extends DbElement> boolean exists(final Example<S> example) {
                                 Example<DbElementPO> examplePO = Example.of(DbElementMapper.mapToPO(example.getProbe()),
                                         example.getMatcher());
                                 return this.repo.exists(examplePO);
                             }
-
+                        
                             @Override
                             // https://github.com/spring-projects/spring-data-commons/blob/main/src/main/asciidoc/query-by-example.adoc#fluent-api
                             public <S extends DbElement, R> R findBy(final Example<S> example,
@@ -270,54 +267,54 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                                 throw new UnsupportedOperationException(
                                         "Ist noch nicht klar wie wir die QueryFunction transformieren ohne die DB Klassen nach außen zu legen. Zudem gibt es keine Alternativ falls wir Dyns nutzen.");
                             }
-
+                        
                             @Override
                             public void flush() {
                                 this.repo.flush();
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> S saveAndFlush(final S entity) {
                                 return (S) DbElementMapper
                                         .mapFromPO(this.repo.saveAndFlush(DbElementMapper.mapToPO(entity)));
                             }
-                            
+                        
                             public <S extends DbElement> DbElementPO saveAndFlushWithoutMapping(final S entity) {
                                 return this.repo.saveAndFlush(DbElementMapper.mapToPO(entity));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> List<S> saveAllAndFlush(final Iterable<S> entities) {
                                 return (List<S>) DbElementMapper
                                         .mapFromPO(this.repo.saveAllAndFlush(DbElementMapper.mapToPO(entities)));
                             }
-                            
+                        
                             public <S extends DbElement> List<DbElementPO> saveAllAndFlushWithoutMapping(final Iterable<S> entities) {
                                 return this.repo.saveAllAndFlush(DbElementMapper.mapToPO(entities));
                             }
-
+                        
                             @Override
                             public void deleteAllInBatch(final Iterable<DbElement> entities) {
                                 this.repo.deleteAllInBatch(DbElementMapper.mapToPO(entities));
                             }
-
+                        
                             @Override
                             public void deleteAllByIdInBatch(final Iterable<DbElementReference> ids) {
                                 this.repo.deleteAllByIdInBatch(DbElementMapper.mapToPKs(ids));
                             }
-
+                        
                             @Override
                             public void deleteAllInBatch() {
                                 this.repo.deleteAllInBatch();
                             }
-
+                        
                             @Override
                             public DbElement getReferenceById(final DbElementReference id) {
                                 return DbElementMapper.mapFromPO(this.repo.getReferenceById(DbElementMapper.mapToPK(id)));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> List<S> findAll(final Example<S> example) {
@@ -325,7 +322,7 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                                         example.getMatcher());
                                 return (List<S>) DbElementMapper.mapFromPO(this.repo.findAll(examplePO));
                             }
-
+                        
                             @SuppressWarnings("unchecked")
                             @Override
                             public <S extends DbElement> List<S> findAll(final Example<S> example, final Sort sort) {
@@ -333,20 +330,20 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                                         example.getMatcher());
                                 return (List<S>) DbElementMapper.mapFromPO(this.repo.findAll(examplePO, sort));
                             }
-
+                        
                             @Override
                             public DbElement getOne(final DbElementReference id) {
                                 return getReferenceById(id);
                             }
-
+                        
                             @Override
                             public DbElement getById(final DbElementReference id) {
                                 return getReferenceById(id);
                             }
-
+                        
                         }
-
-                                                        """
+                        
+                        """
                         .replace("DbElementReference", entitaet.isEigenstaendig() ? entitaet.getNameCapitalized() + "Reference" : parentEntitaet.getNameCapitalized())
                         .replace("DbElement", entitaet.getNameCapitalized()));
         return imports;
@@ -356,17 +353,17 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
         Set<JavaImport> imports = new HashSet<>();
 
         appendLn(sb, """
-
+                
                 import org.springframework.beans.factory.annotation.Autowired;
                 import org.springframework.stereotype.Service;
-
+                
                 @Service
                 public class DbElementRepository extends DbElementRepositoryGen {
-
+                
                     public DbElementRepository(@Autowired final DbElementPoRepository repo) {
                         super(repo);
                     }
-
+                
                     // public DbElement findByName(final String name) {
                     //     return DbElementMapper.mapFromPO(getRepo().findByName(name));
                     // }
@@ -426,7 +423,7 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
 
         appendLn(sb,
                 """
-
+                        
                         /**
                         * Die Methoden hier werden anhand des Namens zu DB Queries:
                         * https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.query-creation
@@ -439,21 +436,6 @@ public class FiJavaPersistenceRepoGenerator extends AbstractJavaGenerator {
                         .formatted(entitaet.getNameCapitalized(), entitaet.getNameCapitalized(),
                                 parentEntitaet.getNameCapitalized()));
         return imports;
-    }
-
-    public List<EntitaetsfeldMitEntitaet> getFelderMitVererbung(final Entitaet entitaet,
-                                                                final DomainModel domain) {
-        List<EntitaetsfeldMitEntitaet> felder = new ArrayList<>();
-        for (Entitaetsfeld entitaetsfeld : entitaet.getFelder()) {
-            felder.add(new EntitaetsfeldMitEntitaet(entitaet, entitaetsfeld));
-        }
-        if (entitaet.getErbtVon() != null) {
-            Entitaet entitaetByReference = domain.getEntitaetByReference(entitaet.getErbtVon());
-            if (entitaetByReference != null) {
-                felder.addAll(getFelderMitVererbung(entitaetByReference, domain));
-            }
-        }
-        return felder;
     }
 
 }

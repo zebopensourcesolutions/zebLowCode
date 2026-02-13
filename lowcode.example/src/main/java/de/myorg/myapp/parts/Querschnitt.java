@@ -4,8 +4,8 @@ package de.myorg.myapp.parts;
 import de.myorg.myapp.ModelPart;
 import de.zeb.lowcode.generator.persistenz.AuditEntitaetsfeld;
 import de.zeb.lowcode.generator.persistenz.IdEntitaetsfeld;
-import de.zeb.lowcode.model.domain.DomainModel.DomainModelBuilder;
 import de.zeb.lowcode.model.domain.*;
+import de.zeb.lowcode.model.domain.DomainModel.DomainModelBuilder;
 
 public class Querschnitt implements ModelPart {
 
@@ -24,7 +24,7 @@ public class Querschnitt implements ModelPart {
     }
 
     public static Entitaetreferenz getMyAppBasisElementRef() {
-        
+
         return Entitaetreferenz.builder()
                 .paket(PAKET)
                 .name("MyAppBasisElement")
@@ -62,7 +62,7 @@ public class Querschnitt implements ModelPart {
                         .build()
                 )
                 .build();
-        
+
 
     }
 

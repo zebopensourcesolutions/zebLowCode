@@ -10,7 +10,6 @@
  */
 package de.zeb.lowcode.generator.domain.maske.java;
 
-import de.zeb.lowcode.generator.domain.AbstractGenerator;
 import de.zeb.lowcode.generator.domain.GeneratorUtils;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
@@ -23,30 +22,40 @@ import de.zeb.lowcode.model.ui.Maske;
 import de.zeb.lowcode.model.ui.MaskenelementMitParent;
 import de.zeb.lowcode.model.ui.maskenelemente.MaskeGridItems;
 import de.zeb.lowcode.model.ui.maskenelemente.UiModelReact;
-import de.zeb.lowcode.model.ui.tabelle.AbstractTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.BooleanTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.DatumTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.DatumUhrzeitTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.Tabelle;
-import de.zeb.lowcode.model.ui.tabelle.Tabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.TextTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.WertebereichTabellenspalte;
-import de.zeb.lowcode.model.ui.tabelle.ZahlTabellenspalte;
+import de.zeb.lowcode.model.ui.tabelle.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author dkleine
  */
 @SuppressWarnings("nls")
 public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
+
+    public static String getSpaltenname(final Tabellenspalte tabellenspalte) {
+        if (!StringUtils.isEmpty(tabellenspalte.getLabel())) {
+            return tabellenspalte.getLabel();
+        }
+        if (tabellenspalte instanceof AbstractTabellenspalte sp &&
+                !StringUtils.isEmpty(sp.getFeld().getFachlicherName())) {
+            return sp.getFeld().getFachlicherName();
+        }
+        throw new IllegalStateException("Für " + tabellenspalte + " fehlt ein Label");
+    }
+
+    protected static String getDefaultwert(final Entitaetsfeld feld) {
+        return switch (feld.getDatenTyp()) {
+            case ID -> "''";
+            case BOOLEAN, TEXT_JN -> "true";
+            case GELD_BETRAG, BASISPUNKT, GANZZAHL_ERWEITERT, PROZENTZAHL, GANZZAHL, ZAHL -> "0";
+            case URL, TEXT -> "\"\"";
+            case DATUM -> "new Date()";
+            case ZEITSTEMPEL -> "new LocalDateTime()";
+            case BINARY -> "null";
+            default -> null;
+        };
+    }
 
     @Override
     public List<GeneratedFile> prepare(final LowCodeModel lcm) {
@@ -118,10 +127,10 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
 
         // import benötigen wir hier nicht, liegt im gleichen Package
         String additionalStateTyp = getAdditionalStateType(shortApplicationName, fiMaske, tabelle,
-                new HashSet<>(), domain);
+                new HashSet<>());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *
@@ -135,7 +144,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                     private List<%sZeile> allRows;
                     private List<%sZeile> selectedRows;
                     private %s            additionalState;
-
+                
                 }
                 """.formatted(javaName, tabelle.getFeld()
                         .getNameCapitalized(), additionalStateTyp,
@@ -171,7 +180,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                 .build());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *
@@ -221,7 +230,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                 .build());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *
@@ -275,7 +284,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                                                            final DomainModel domain) {
         Set<JavaImport> imports = new HashSet<>();
         Entitaetsfeld feld = tabelle.getFeld();
-        
+
         String feldname = tabelle.getFeld()
                 .getNameCapitalized();
         Entitaet zielEntitaet = domain.getEntitaetByReference(feld.getZielEntitaet());
@@ -314,7 +323,6 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
         getMapperImport(shortApplicationName, domain.getEntitaetByReference(feld.getZielEntitaet()), imports, fiMaske.getEntitaet());
 
 
-        
         String tabellendefinitionParameterTyp = "Serializable";
         if (!tabelle.getTabellendefinitionParameterFelder()
                 .isEmpty()) {
@@ -327,7 +335,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
             tabellendefinitionParameterTyp = feldname + "TabellendefinitionParameter";
         }
         String additionalStateTyp = getAdditionalStateType(shortApplicationName, fiMaske, tabelle,
-                imports, domain);
+                imports);
 
         String modellname = domain.getEntitaetByReference(feld.getZielEntitaet())
                 .getNameCapitalized();
@@ -342,7 +350,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                         @AllArgsConstructor
                         @UiModule("%s_%s_TabellenService")
                         public class %sTabellenService implements ITableUiService<%s, %s, %s, %sZeile, %sUpdateRowPayload> {
-
+                        
                             private final ITableFactoryService     tableFactory;
                                \s"""
                         .formatted(fiMaske.getName()
@@ -358,12 +366,12 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                             public TableDefinition getTabelleDefinition(final %s parameter) {
                                 //FIXME Selektionsvariante aus Modell übernehmen
                                 final TableBuilder<FieldIdentifier> builder = this.tableFactory.createMultiSelection();
-
+                        
                                 %s
-
+                        
                                 return builder.toDefinition();
                             }
-
+                        
                         """
                         .formatted(tabellendefinitionParameterTyp, getTabellendefinitionInhalt(
                                 shortApplicationName, fiMaske, tabelle, imports)));
@@ -384,13 +392,13 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                             final %sUpdateRowPayload updatePayload) {
                         TableOperationResultBuilder<%s> builder = this.tableFactory
                                 .createOperationResultBuilder();
-
+                
                         builder.addNewRow(%sZeile.builder()
                                 .fachobjekt(%s.builder()
                                 %s
                                 .build())
                             .build());
-
+                
                         return builder.toResult();
                     }
                 """.formatted(modellname, feldname, modellname, feld.getNameCapitalized(), zielEntitaet.getNameCapitalized(),
@@ -404,14 +412,14 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                             final %sUpdateRowPayload updatePayload) {
                         TableOperationResultBuilder<%s> builder = this.tableFactory
                                 .createOperationResultBuilder();
-
+                
                         if ((updatePayload != null) && (updatePayload.getSelectedRows() != null)) {
                             updatePayload.getSelectedRows()
                                     .stream()
                                     .map(r -> r.getId())
                                     .forEach(builder::addDeleteRow);
                         }
-
+                
                         return builder.toResult();
                     }
                 """.formatted(modellname, feldname, modellname));
@@ -424,10 +432,10 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
                             final %sUpdateRowPayload updatePayload) {
                         TableOperationResultBuilder<%s> builder = this.tableFactory
                                 .createOperationResultBuilder();
-
+                
                         updatePayload.getSelectedRows()
                                 .forEach(builder::addEditRow);
-
+                
                         return builder.toResult();
                     }
                 """.formatted(modellname, feldname, modellname));
@@ -488,8 +496,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
     }
 
     private String getAdditionalStateType(final String shortApplicationName,
-                                          final MaskeGridItems fiMaske, final Tabelle tabelle, final Set<JavaImport> imports,
-                                          final DomainModel domain) {
+                                          final MaskeGridItems fiMaske, final Tabelle tabelle, final Set<JavaImport> imports) {
         String additionalStateTyp = "Serializable";
         imports.add(JavaImport.builder()
                 .from("java.io.Serializable")
@@ -510,7 +517,7 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
     private String getPackageLine(final String shortApplicationName, final MaskeGridItems fiMaske,
                                   final String suffix) {
         return "package " + getPackageName(shortApplicationName, fiMaske, suffix)
-                + ";" + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + ";" + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     private String getPackageName(final String shortApplicationName, final MaskeGridItems fiMaske,
@@ -526,33 +533,17 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
             final MaskeGridItems fiMaske, final Tabelle tabelle) {
         Map<String, MaskenelementMitParent> ergebnis = new HashMap<>();
         for (MaskenelementMitParent maskenelementMitParent : fiMaske.getMaskenelementeRekursiv()) {
-            if (maskenelementMitParent.getChild() instanceof Tabelle t) {
-                if (t.getName()
-                        .equals(tabelle.getName())) {
-                    for (Tabellenspalte tabellenspalte : t.getSpalten()) {
-                        ergebnis.put(tabellenspalte.getName(), MaskenelementMitParent.builder()
-                                .child(tabellenspalte)
-                                .parent(maskenelementMitParent)
-                                .build());
-                    }
+            if (maskenelementMitParent.getChild() instanceof Tabelle t &&
+                    t.getName().equals(tabelle.getName())) {
+                for (Tabellenspalte tabellenspalte : t.getSpalten()) {
+                    ergebnis.put(tabellenspalte.getName(), MaskenelementMitParent.builder()
+                            .child(tabellenspalte)
+                            .parent(maskenelementMitParent)
+                            .build());
                 }
             }
         }
         return ergebnis;
-    }
-
-    public static String getSpaltenname(final Tabellenspalte tabellenspalte) {
-        if (!StringUtils.isEmpty(tabellenspalte.getLabel())) {
-            return tabellenspalte.getLabel();
-        }
-        if (tabellenspalte instanceof AbstractTabellenspalte sp) {
-            if (!StringUtils.isEmpty(sp.getFeld()
-                    .getFachlicherName())) {
-                return sp.getFeld()
-                        .getFachlicherName();
-            }
-        }
-        throw new IllegalStateException("Für " + tabellenspalte + " fehlt ein Label");
     }
 
     private String getTabellendefinitionInhalt(final String shortApplicationName,
@@ -629,18 +620,5 @@ public class FiJavaTabellenserviceGenerator extends AbstractJavaGenerator {
 
         }
         return sb.toString();
-    }
-
-    protected static String getDefaultwert(final Entitaetsfeld feld) {
-        return switch (feld.getDatenTyp()) {
-            case ID -> "''";
-            case BOOLEAN, TEXT_JN -> "true";
-            case GELD_BETRAG, BASISPUNKT, GANZZAHL_ERWEITERT, PROZENTZAHL, GANZZAHL, ZAHL -> "0";
-            case URL, TEXT -> "\"\"";
-            case DATUM -> "new Date()";
-            case ZEITSTEMPEL -> "new LocalDateTime()";
-            case BINARY -> "null";
-            default -> null;
-        };
     }
 }

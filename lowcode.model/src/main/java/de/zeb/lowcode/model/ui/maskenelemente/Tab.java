@@ -10,8 +10,6 @@
 package de.zeb.lowcode.model.ui.maskenelemente;
 
 
-import java.util.List;
-
 import de.zeb.lowcode.model.ui.ChildrenAware;
 import de.zeb.lowcode.model.ui.Maskenelement;
 import de.zeb.lowcode.model.ui.MaskenelementIf;
@@ -21,6 +19,8 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 
 /**
  * @author dkleine
@@ -28,20 +28,22 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class Tab extends Maskenelement implements ChildrenAware {
 
     @NonNull
-    public final String                name;
+    public final String name;
 
     @NonNull
-    @Singular( "maskenelement" )
+    @Singular("maskenelement")
     public final List<MaskenelementIf> maskenelemente;
 
     @NonNull
-    public final String                label;
+    public final String label;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<? extends MaskenelementIf> getKinder() {
         return getMaskenelemente();

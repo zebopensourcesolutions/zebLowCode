@@ -10,9 +10,6 @@
 package de.zeb.lowcode.model.ui.maskenelemente;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import de.zeb.lowcode.model.ui.ChildrenAware;
 import de.zeb.lowcode.model.ui.Maskenelement;
 import de.zeb.lowcode.model.ui.MaskenelementIf;
@@ -21,29 +18,34 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * @author dkleine
  *
  */
 @SuperBuilder
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Gridelement extends Maskenelement implements ChildrenAware {
 
     @NonNull
-    public final String          name;
+    public final String name;
 
     @NonNull
     public final MaskenelementIf maskenelement;
 
     @NonNull
-    public final String          label;
+    public final String label;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<? extends MaskenelementIf> getKinder() {
-        return Arrays.asList( getMaskenelement() );
+        return Arrays.asList(getMaskenelement());
     }
 
 }

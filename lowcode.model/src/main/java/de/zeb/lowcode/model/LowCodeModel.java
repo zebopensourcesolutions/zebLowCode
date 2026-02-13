@@ -25,9 +25,9 @@ import lombok.NonNull;
 @Data
 public class LowCodeModel {
 
-    public final UiModel<?>  ui;
+    public final UiModel<?> ui;
     public final DomainModel domain;
     @NonNull
-    public final String      anwendungskuerzel;
+    public final String anwendungskuerzel;
 
 }

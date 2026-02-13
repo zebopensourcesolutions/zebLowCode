@@ -10,12 +10,11 @@
 package de.zeb.lowcode.model.domain;
 
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -26,39 +25,39 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Entitaetsfeld {
     @Builder.Default
-    public final boolean          optional          = false;
+    public final boolean optional = false;
     @Builder.Default
-    public final boolean          pk                = false;
+    public final boolean pk = false;
     @Builder.Default
-    public final boolean          fachlichEindeutig = false;
+    public final boolean fachlichEindeutig = false;
 
     @NonNull
-    public final String           name;
-    public final String           fachlicherName;
-    public final String           beschreibung;
-    public final Wertebereich     wertebereich;
+    public final String name;
+    public final String fachlicherName;
+    public final String beschreibung;
+    public final Wertebereich wertebereich;
     @Builder.Default
     @NonNull
-    public final Datentyp         datenTyp          = Datentyp.TEXT;
+    public final Datentyp datenTyp = Datentyp.TEXT;
     @Builder.Default
-    public final boolean          alsListe          = false;
+    public final boolean alsListe = false;
     @Builder.Default
-    public final boolean          alsTabelle        = false;
+    public final boolean alsTabelle = false;
     public final Entitaetreferenz zielEntitaet;
-    public final String           dbSpaltenname;
-    public final Integer          anzahlZeichen;
-    public final Integer          anzahlZahlen;
-    public final Integer          anzahlNachkommastellen;
+    public final String dbSpaltenname;
+    public final Integer anzahlZeichen;
+    public final Integer anzahlZahlen;
+    public final Integer anzahlNachkommastellen;
     @Builder.Default
-    public final boolean          persistenz        = true;
+    public final boolean persistenz = true;
 
 
     public String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
+        return StringUtils.capitalize(getName());
     }
 
     public String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
+        return StringUtils.uncapitalize(getName());
     }
 
 }

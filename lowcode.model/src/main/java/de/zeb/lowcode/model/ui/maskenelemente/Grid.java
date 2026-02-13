@@ -10,8 +10,6 @@
 package de.zeb.lowcode.model.ui.maskenelemente;
 
 
-import java.util.List;
-
 import de.zeb.lowcode.model.ui.ChildrenAware;
 import de.zeb.lowcode.model.ui.Maskenelement;
 import de.zeb.lowcode.model.ui.MaskenelementIf;
@@ -21,22 +19,24 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 
 /**
  * @author dkleine
  *
  */
 @SuperBuilder
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Grid extends Maskenelement implements ChildrenAware {
 
     @NonNull
-    public final String            name;
+    public final String name;
 
-    public final String            label;
+    public final String label;
 
-    @Singular( "element" )
+    @Singular("element")
     public final List<Gridelement> elemente;
 
     @Override

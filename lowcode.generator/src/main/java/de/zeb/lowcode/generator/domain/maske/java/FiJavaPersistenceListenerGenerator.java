@@ -27,17 +27,13 @@ import java.util.Set;
 /**
  * @author dkleine Hier kein Lombok nutzen, wird nicht durch Delombok geschickt
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "PMD.UnusedFormalParameter"})
 public class FiJavaPersistenceListenerGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<GeneratedFile> prepare(final LowCodeModel lcm) {
 
-        List<GeneratedFile> result = new ArrayList<>();
-
-        result.addAll(persistenceListernerErzeugen(lcm));
-
-        return result;
+        return new ArrayList<>(persistenceListernerErzeugen(lcm));
     }
 
     private List<GeneratedFile> persistenceListernerErzeugen(final LowCodeModel modell) {
@@ -85,14 +81,14 @@ public class FiJavaPersistenceListenerGenerator extends AbstractJavaGenerator {
         Set<JavaImport> imports = new HashSet<>();
 
         // Nur Entitäten mit Audit-Feld protokollieren
-        if (entitaet.getFelder().stream().filter(f -> f instanceof AuditEntitaetsfeld).toList().size() == 0) {
+        if (entitaet.getFelder().stream().filter(f -> f instanceof AuditEntitaetsfeld).toList().isEmpty()) {
 
             appendLn(sb,
                     """
                             import jakarta.persistence.PrePersist;
                             import jakarta.persistence.PreUpdate;
                             import example.myapp.MYAPPPOListener;
-                                                        
+                            
                             /**
                              * @PrePersist Executed before the entity manager persist operation is actually executed or cascaded. This call is synchronous with the persist operation.
                              * @PreRemove Executed before the entity manager remove operation is actually executed or cascaded. This call is synchronous with the remove operation.
@@ -103,19 +99,19 @@ public class FiJavaPersistenceListenerGenerator extends AbstractJavaGenerator {
                              * @PostLoad Executed after an entity has been loaded into the current persistence context or an entity has been refreshed.
                              */
                             public class MyappBasisElementPOListener extends MYAPPPOListener {
-                                                        
+                            
                                 @PreUpdate
                                 public void update(MyappBasisElementPO element) {
                                     super.update(element);
                                 }
-                                                        
+                            
                                 @PrePersist
                                 public void createForTheFirstTime(MyappBasisElementPO element) {
                                     super.createForTheFirstTime(element);
                                 }
-
+                            
                             }
-                                            """
+                            """
                             .replace("MyappBasisElementPO", entitaet.getNameCapitalized() + "PO"));
 
         } else {
@@ -132,7 +128,7 @@ public class FiJavaPersistenceListenerGenerator extends AbstractJavaGenerator {
                             import org.springframework.stereotype.Component;
                             import example.myapp.MYAPPPOListener;
                             import example.myapp.persistenz.protokollierung.ProtokollService;
-
+                            
                             /**
                              * @PrePersist Executed before the entity manager persist operation is actually executed or cascaded. This call is synchronous with the persist operation.
                              * @PreRemove Executed before the entity manager remove operation is actually executed or cascaded. This call is synchronous with the remove operation.
@@ -144,44 +140,44 @@ public class FiJavaPersistenceListenerGenerator extends AbstractJavaGenerator {
                              */
                             @Component 
                             public class MyappBasisElementPOListener extends MYAPPPOListener {
-
+                            
                                 @Autowired
                                 public MyappBasisElementPOListener(ProtokollService protokollService) {
                                     super(protokollService);
                                 }
-                                
+                            
                                 @PreUpdate
                                 public void update(MyappBasisElementPO element) {
                                     super.update(element);
                                 }
-                                                        
+                            
                                 @PrePersist
                                 public void createForTheFirstTime(MyappBasisElementPO element) {
                                     super.createForTheFirstTime(element);
                                 }
-                                                    
+                            
                                 @PostLoad
                                 public void postLoad(MyappBasisElementPO element) {
                                     element.setOldValues(super.postLoad(element));
                                 }
-                                                    
+                            
                                 @PostPersist
                                 public void postPersist(MyappBasisElementPO element) {
                                     super.postPersist(element);
                                 }
-                                                    
+                            
                                 @PostUpdate
                                 public void postUpdate(MyappBasisElementPO element) {
                                     super.postUpdate(element);
                                 }
-                                                    
+                            
                                 @PostRemove
                                 public void postRemove(MyappBasisElementPO element) {
                                     super.postRemove(element);
                                 }
-
+                            
                             }
-                                            """
+                            """
                             .replace("MyappBasisElementPO", entitaet.getNameCapitalized() + "PO"));
         }
         return imports;

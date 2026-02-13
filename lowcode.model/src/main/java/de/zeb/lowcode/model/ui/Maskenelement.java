@@ -10,10 +10,9 @@
 package de.zeb.lowcode.model.ui;
 
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -28,11 +27,11 @@ public abstract class Maskenelement implements MaskenelementIf {
 
     @Override
     public String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
+        return StringUtils.capitalize(getName());
     }
 
     @Override
     public String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
+        return StringUtils.uncapitalize(getName());
     }
 }

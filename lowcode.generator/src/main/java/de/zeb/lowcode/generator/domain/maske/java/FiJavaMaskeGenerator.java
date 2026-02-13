@@ -10,7 +10,6 @@
  */
 package de.zeb.lowcode.generator.domain.maske.java;
 
-import de.zeb.lowcode.generator.domain.AbstractGenerator;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.generator.model.JavaImport;
@@ -25,11 +24,7 @@ import de.zeb.lowcode.model.ui.tabelle.Tabelle;
 import de.zeb.lowcode.model.ui.tabelle.Tabellenspalte;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author dkleine
@@ -42,7 +37,7 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
 
         UiModelReact uimodell = (UiModelReact) lcm.getUi();
         List<GeneratedFile> result = new ArrayList<>();
-        if (uimodell!=null) {
+        if (uimodell != null) {
             for (MaskeGridItems fiMaske : uimodell.getMasken()) {
                 result.add(
                         maskenParameterErzeugen(lcm.getAnwendungskuerzel(), fiMaske, lcm.getDomain()));
@@ -76,7 +71,7 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
                 .build());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  *
@@ -130,7 +125,7 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
                 @Getter
                 @SuppressWarnings( "nls" )
                 public enum %sFieldEnum implements FieldIdentifier{
-
+                
                    \s""".formatted(StringUtils.capitalize(fiMaske.getName())));
 
         List<MaskenelementMitParent> maskenelementeRekursiv = fiMaske.getMaskenelementeRekursiv();
@@ -164,9 +159,9 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
 
         appendLn(sb, """
                    \s
-
+                
                     String fieldName;
-
+                
                 }""");
 
         String content = sb.toString();
@@ -197,13 +192,13 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
     private String getPackageLine(final String shortApplicationName, final MaskeGridItems fiMaske,
                                   final String suffix) {
         return "package " + getPackageName(shortApplicationName, fiMaske, suffix)
-                + ";" + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + ";" + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     private Set<JavaImport> serviceMethodenErzeugen(final String shortApplicationName,
                                                     final MaskeGridItems fiMaske, final StringBuilder sb) {
         Set<JavaImport> imports = new HashSet<>();
-        
+
         imports.add(JavaImport.builder()
                 .from("lombok.AllArgsConstructor")
                 .from("example.apl.uui.api.UiService")
@@ -214,7 +209,7 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
                 .from("example.apl.uui.api.UiModule")
                 .from("example.%s.%s.model.%sModel".formatted(shortApplicationName, fiMaske.getNameUncapitalized(), fiMaske.getNameCapitalized()))
                 .build());
-        
+
         String modelklasse = fiMaske.getNameCapitalized() + "Model";
         String parameterTyp = "Serializable";
         if (!fiMaske.getParameterFelder()
@@ -297,7 +292,7 @@ public class FiJavaMaskeGenerator extends AbstractJavaGenerator {
         appendLn(sb, """
                          return validateResultMap;
                     }
-
+                
                 """);
 
         appendLn(sb, """

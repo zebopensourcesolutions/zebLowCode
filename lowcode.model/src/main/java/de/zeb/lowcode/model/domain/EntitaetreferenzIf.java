@@ -24,11 +24,11 @@ public interface EntitaetreferenzIf {
     String getPaket();
 
     default String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
+        return StringUtils.capitalize(getName());
     }
 
     default String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
+        return StringUtils.uncapitalize(getName());
     }
 
 }

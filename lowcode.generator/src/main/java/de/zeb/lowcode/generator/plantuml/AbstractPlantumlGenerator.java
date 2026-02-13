@@ -18,9 +18,9 @@ public abstract class AbstractPlantumlGenerator {
                     BackgroundColor<< Verarbeitungskontext >> Gold
                 }
                 skinparam groupInheritance 3
-
+                
                 set namespaceSeparator ::
-
+                
                 """);
     }
 }

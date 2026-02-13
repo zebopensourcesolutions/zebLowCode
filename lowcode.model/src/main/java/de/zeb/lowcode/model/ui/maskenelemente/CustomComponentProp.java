@@ -23,8 +23,8 @@ import lombok.Data;
 @Builder
 public class CustomComponentProp {
 
-    public final String        name;
+    public final String name;
     public final Entitaetsfeld mappingFeld;
-    public final String        mappingWert;
+    public final String mappingWert;
 
 }

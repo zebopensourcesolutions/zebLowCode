@@ -1,7 +1,6 @@
 package de.myorg.myapp;
 
 
-
 import de.myorg.myapp.parts.Bericht;
 import de.myorg.myapp.parts.Protokollierung;
 import de.myorg.myapp.parts.Querschnitt;
@@ -17,10 +16,11 @@ import de.zeb.lowcode.model.domain.DomainModel.DomainModelBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+
 public class MyDemoAppGenerator {
 
 

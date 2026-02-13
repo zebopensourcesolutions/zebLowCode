@@ -29,6 +29,14 @@ import java.util.Set;
 @SuppressWarnings("nls")
 public abstract class AbstractJavaGenerator extends AbstractGenerator {
 
+    protected static Entitaet getHighestParentEntitaet(Entitaet entitaet, DomainModel modell) {
+        Entitaet parentEntitaet = entitaet;
+        while (parentEntitaet.getErbtVon() != null) {
+            parentEntitaet = modell.getEntitaetByReference(parentEntitaet.getErbtVon());
+        }
+        return parentEntitaet;
+    }
+
     protected final void maskenfeldZeileErzeugen(final String shortApplicationName,
                                                  final StringBuilder sb, final Set<JavaImport> imports, final Entitaetsfeld feld,
                                                  final DomainModel domain) {
@@ -93,31 +101,31 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
     protected final String getPackageLineDomain(final String shortApplicationName,
                                                 final Entitaet entitaet) {
         return "package " + getEntitaetDomainPackage(shortApplicationName, entitaet) + ";"
-                + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     protected final String getPackageLinePersistence(final String shortApplicationName,
                                                      final Entitaet entitaet) {
         return "package " + getPersistenceDomainPackage(shortApplicationName, entitaet) + ";"
-                + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     protected final String getPackageLineRepository(final String shortApplicationName,
                                                     final Entitaet entitaet) {
         return "package " + getRepositoryPackage(shortApplicationName, entitaet) + ";"
-                + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     protected final String getPackageLineMapper(final String shortApplicationName,
                                                 final Entitaet entitaet) {
         return "package " + getPersistenceMapperPackage(shortApplicationName, entitaet) + ";"
-                + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     protected final String getPackageLineWertebereich(final String anwendungskuerzel,
                                                       final Wertebereich wertebereich) {
         return "package " + getWertebereichPackage(anwendungskuerzel, wertebereich) + ";"
-                + AbstractGenerator.LINE_SEPARATOR + AbstractGenerator.LINE_SEPARATOR;
+                + LINE_SEPARATOR + LINE_SEPARATOR;
     }
 
     protected final String getWertebereichPackage(final String shortApplicationName,
@@ -267,14 +275,6 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
                 .folder("src/test/java/example/" + modell.getAnwendungskuerzel() + "/"
                         + packageFolder + "/" + typ)
                 .file(dateiname);
-    }
-
-    protected static Entitaet getHighestParentEntitaet(Entitaet entitaet, DomainModel modell) {
-        Entitaet parentEntitaet = entitaet;
-        while (parentEntitaet.getErbtVon() != null) {
-            parentEntitaet = modell.getEntitaetByReference(parentEntitaet.getErbtVon());
-        }
-        return parentEntitaet;
     }
 
 }

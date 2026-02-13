@@ -10,15 +10,13 @@
 package de.zeb.lowcode.model.domain;
 
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
-import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 
 /**
@@ -29,16 +27,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class DbIndex {
     @NonNull
-    public final String           name;
-    @Singular( "spalte" )
+    public final String name;
+    @Singular("spalte")
     public final List<Entitaetsfeld> spalten;
 
     public String getNameCapitalized() {
-        return StringUtils.capitalize( getName() );
+        return StringUtils.capitalize(getName());
     }
 
     public String getNameUncapitalized() {
-        return StringUtils.uncapitalize( getName() );
+        return StringUtils.uncapitalize(getName());
     }
 
 }

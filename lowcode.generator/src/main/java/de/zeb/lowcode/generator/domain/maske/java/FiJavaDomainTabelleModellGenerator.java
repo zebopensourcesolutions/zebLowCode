@@ -71,8 +71,7 @@ public class FiJavaDomainTabelleModellGenerator extends AbstractJavaGenerator {
         GeneratedFileBuilder generatedFileBuilder = klasseGenErzeugen(modell, packageFolder, "domain",
                 StringUtils.capitalize(feld.getName()) + "Zeile.java");
 
-        Set<JavaImport> imports = new HashSet<>();
-        imports.addAll(variablenDefinitionErzeugen(modell.getAnwendungskuerzel(), feld, sb,
+        Set<JavaImport> imports = new HashSet<>(variablenDefinitionErzeugen(modell.getAnwendungskuerzel(), feld, sb,
                 modell.getDomain(), maske.getEntitaet()));
 
         String content = sb.toString();
@@ -103,7 +102,7 @@ public class FiJavaDomainTabelleModellGenerator extends AbstractJavaGenerator {
                 .getNameCapitalized();
         appendLn(sb,
                 """
-
+                        
                         /**
                          * Generierter Code, bitte keine manuellen Änderungen vornehmen
                          *

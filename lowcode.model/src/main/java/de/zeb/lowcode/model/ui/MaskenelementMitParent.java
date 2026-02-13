@@ -10,11 +10,10 @@
 package de.zeb.lowcode.model.ui;
 
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -27,18 +26,18 @@ public class MaskenelementMitParent {
 
     public final MaskenelementMitParent parent;
     @NonNull
-    public final MaskenelementIf        child;
+    public final MaskenelementIf child;
 
     public String getNamenCapitalized() {
-        if ( getParent() != null ) {
-            return getParent().getNamenCapitalized() + StringUtils.capitalize( getChild().getName() );
+        if (getParent() != null) {
+            return getParent().getNamenCapitalized() + StringUtils.capitalize(getChild().getName());
         }
-        return StringUtils.capitalize( getChild().getName() );
+        return StringUtils.capitalize(getChild().getName());
     }
 
-    public String getName( final String trennzeichen ) {
-        if ( getParent() != null ) {
-            return getParent().getName( trennzeichen ) + trennzeichen + getChild().getName();
+    public String getName(final String trennzeichen) {
+        if (getParent() != null) {
+            return getParent().getName(trennzeichen) + trennzeichen + getChild().getName();
         }
         return getChild().getName();
     }

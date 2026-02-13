@@ -14,12 +14,7 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.JavaImport;
-import de.zeb.lowcode.model.domain.Datentyp;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetreferenz;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.Wertebereich;
+import de.zeb.lowcode.model.domain.*;
 import de.zeb.lowcode.model.ui.Maske;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,12 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+@SuppressWarnings("PMD.UselessParentheses")
 public class GeneratorUtils {
 
     public static void runPrettier(final String basePath) {
@@ -151,12 +143,14 @@ public class GeneratorUtils {
     }
 
     public static String normalizeLineBreaks(String content) {
-        // Zeilenumbrüche zwischen den Systemen muss Git regeln
-        content = content.replaceAll("\r\n", "##WINDOWS_LINE_BREAK##");
-        content = content.replaceAll("\n", "##UNIX_LINE_BREAK##");
-        content = content.replaceAll("\r", "\r\n");
-        content = content.replaceAll("##WINDOWS_LINE_BREAK##", "\r\n");
-        content = content.replaceAll("##UNIX_LINE_BREAK##", "\r\n");
+        if (content != null) {
+            // Zeilenumbrüche zwischen den Systemen muss Git regeln
+            content = content.replaceAll("\r\n", "##WINDOWS_LINE_BREAK##");
+            content = content.replaceAll("\n", "##UNIX_LINE_BREAK##");
+            content = content.replaceAll("\r", "\r\n");
+            content = content.replaceAll("##WINDOWS_LINE_BREAK##", "\r\n");
+            content = content.replaceAll("##UNIX_LINE_BREAK##", "\r\n");
+        }
         return content;
     }
 
@@ -205,7 +199,7 @@ public class GeneratorUtils {
 
     public static String getJavaType(final Entitaetsfeld feld, final Set<JavaImport> imports,
                                      final DomainModel domain, boolean transientNonSerializableTypes) {
-        String typ = "";
+        String typ;
         if (feld.getWertebereich() != null) {
             typ = feld.getWertebereich()
                     .getNameCapitalized() + "Enum";

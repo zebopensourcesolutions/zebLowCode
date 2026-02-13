@@ -10,8 +10,6 @@
 package de.zeb.lowcode.model.ui.tabelle;
 
 
-import java.util.List;
-
 import de.zeb.lowcode.model.domain.Entitaetsfeld;
 import de.zeb.lowcode.model.ui.MaskenelementMitFeld;
 import lombok.Builder;
@@ -20,6 +18,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 
 /**
  * @author dkleine
@@ -27,31 +27,31 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-@EqualsAndHashCode( callSuper = true )
+@EqualsAndHashCode(callSuper = true)
 public class Tabelle extends MaskenelementMitFeld {
 
-    @Singular( "spalte" )
+    @Singular("spalte")
     public final List<Tabellenspalte> spalten;
 
     /*
      * Parameter müssen Felder aus der Masken-Entität sein Die Inhalte werden beim editieren, löschen, hinzufügen und
      * Validieren an das Backend mitgegeben
      */
-    @Singular( "parameterFeld" )
-    public final List<Entitaetsfeld>  parameterFelder;
+    @Singular("parameterFeld")
+    public final List<Entitaetsfeld> parameterFelder;
 
     /*
      * Diese Felder werden beim Abrufen der Tabellendefinition genutzt. Ändert sich ein Wert hier drin so wird die
      * gesamte Tabelle neu gerendert
      */
-    @Singular( "tabellendefinitionParameterFeld" )
-    public final List<Entitaetsfeld>  tabellendefinitionParameterFelder;
+    @Singular("tabellendefinitionParameterFeld")
+    public final List<Entitaetsfeld> tabellendefinitionParameterFelder;
 
     @Builder.Default
-    public final boolean              favoritenAktiv = false;
+    public final boolean favoritenAktiv = false;
     @Builder.Default
-    public final boolean              anlegenButton  = true;
+    public final boolean anlegenButton = true;
     @Builder.Default
-    public final boolean              loeschenButton = true;
+    public final boolean loeschenButton = true;
 
 }

@@ -10,14 +10,6 @@
  */
 package de.zeb.lowcode.generator.domain.maske.java;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import de.zeb.lowcode.model.domain.EntitaetsfeldMitEntitaet;
-import org.apache.commons.lang3.StringUtils;
-
 import de.zeb.lowcode.generator.model.GeneratedFile;
 import de.zeb.lowcode.generator.model.GeneratedFile.GeneratedFileBuilder;
 import de.zeb.lowcode.generator.model.JavaImport;
@@ -25,22 +17,25 @@ import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.domain.DomainModel;
 import de.zeb.lowcode.model.domain.Entitaet;
 import de.zeb.lowcode.model.domain.Entitaetsfeld;
+import de.zeb.lowcode.model.domain.EntitaetsfeldMitEntitaet;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author dkleine
  *
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "PMD.UnusedFormalParameter"})
 public class FiJavaPersistenceServiceTestGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<GeneratedFile> prepare(final LowCodeModel lcm) {
 
-        List<GeneratedFile> result = new ArrayList<>();
-
-        result.addAll(repositoryGenTestErzeugen(lcm));
-
-        return result;
+        return new ArrayList<>(repositoryGenTestErzeugen(lcm));
     }
 
     private List<GeneratedFile> repositoryGenTestErzeugen(final LowCodeModel modell) {
@@ -59,8 +54,8 @@ public class FiJavaPersistenceServiceTestGenerator extends AbstractJavaGenerator
     }
 
     private void repositoryTestErzeugen(final LowCodeModel modell,
-            final List<GeneratedFile> results, final Entitaet entitaet,
-            final List<String> verarbeitet) {
+                                        final List<GeneratedFile> results, final Entitaet entitaet,
+                                        final List<String> verarbeitet) {
         StringBuilder sb = new StringBuilder();
         String packageLine = getPackageLinePersistence(modell.getAnwendungskuerzel(), entitaet);
         String packageFolder = "";
@@ -84,7 +79,7 @@ public class FiJavaPersistenceServiceTestGenerator extends AbstractJavaGenerator
     }
 
     private Set<JavaImport> repositoryInhaltErzeugen(final String shortApplicationName,
-            final Entitaet entitaet, final StringBuilder sb, final DomainModel modell) {
+                                                     final Entitaet entitaet, final StringBuilder sb, final DomainModel modell) {
         Set<JavaImport> imports = new HashSet<>();
         imports.add(JavaImport.builder()
                 .from("org.springframework.data.jpa.repository.JpaRepository")
@@ -96,7 +91,7 @@ public class FiJavaPersistenceServiceTestGenerator extends AbstractJavaGenerator
                 .build());
 
         appendLn(sb, """
-
+                
                 /**
                  * Generierter Code, bitte keine manuellen Änderungen vornehmen
                  * Package private Repo für die Persistenz

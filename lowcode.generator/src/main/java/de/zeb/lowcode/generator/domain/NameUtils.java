@@ -6,7 +6,7 @@ public class NameUtils {
 
     public static String camelToUnderscore(final String value) {
         String result = value.replace(" ", "_");
-        result = result.replaceAll("([a-z])([A-Z])", "$1_$2");
+        result = result.replaceAll("([a-z0-9])([A-Z])", "$1_$2");
         result = result.replace(".", "_");
         return result;
     }
@@ -15,13 +15,6 @@ public class NameUtils {
         return camelToUnderscore(value).toUpperCase();
     }
 
-    /**
-     * Wir erwarten CAMEL_CASE Eingaben für Prefix und Namen
-     *
-     * @param prefix
-     * @param name
-     * @return
-     */
     public static String prefixErweitern(final String prefix, final String name) {
         String ergebnis = name;
         if (!StringUtils.isEmpty(prefix)) {

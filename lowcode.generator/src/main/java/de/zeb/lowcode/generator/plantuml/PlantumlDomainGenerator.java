@@ -2,17 +2,15 @@ package de.zeb.lowcode.generator.plantuml;
 
 import de.zeb.lowcode.generator.domain.GeneratorUtils;
 import de.zeb.lowcode.model.LowCodeModel;
-import de.zeb.lowcode.model.domain.DomainModel;
-import de.zeb.lowcode.model.domain.Entitaet;
-import de.zeb.lowcode.model.domain.Entitaetsfeld;
-import de.zeb.lowcode.model.domain.Wertebereich;
-import de.zeb.lowcode.model.domain.WertebereichEintrag;
+import de.zeb.lowcode.model.domain.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PlantumlDomainGenerator extends AbstractPlantumlGenerator {
+
+    private static final int MAX_ENUM_EINTRAEGE = 8;
 
     @Override
     public String generateModel(final LowCodeModel lcm) {
@@ -67,13 +65,11 @@ public class PlantumlDomainGenerator extends AbstractPlantumlGenerator {
         }
     }
 
-    private static final int MAX_ENUM_EINTRAEGE = 8;
-
     private void wertebereichEnumErzeugen(final Wertebereich wertebereich, final StringBuilder sb,
                                           final Set<String> verarbeiteteWertebereiche) {
         if (!verarbeiteteWertebereiche.contains(getWertebereichClassName(wertebereich))) {
             sb.append("""
-
+                    
                     class %s{
                     """.formatted(getWertebereichClassName(wertebereich)));
 
@@ -93,7 +89,7 @@ public class PlantumlDomainGenerator extends AbstractPlantumlGenerator {
             }
             sb.append("""
                     }
-
+                    
                     """);
             verarbeiteteWertebereiche.add(getWertebereichClassName(wertebereich));
         }
@@ -157,7 +153,7 @@ public class PlantumlDomainGenerator extends AbstractPlantumlGenerator {
                                   final Set<String> verarbeiteteEntitaeten, final DomainModel domain) {
         if (!verarbeiteteEntitaeten.contains(getEntitaetClassName(entitaet))) {
             sb.append("""
-
+                    
                     %sclass %s{
                     """.formatted(entitaet.isAbstrakt() ? "abstract " : "",
                     getEntitaetClassName(entitaet)));
@@ -171,7 +167,7 @@ public class PlantumlDomainGenerator extends AbstractPlantumlGenerator {
             }
             sb.append("""
                     }
-
+                    
                     """);
             verarbeiteteEntitaeten.add(getEntitaetClassName(entitaet));
         }

@@ -1,52 +1,51 @@
 package de.zeb.lowcode.generator.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import de.zeb.lowcode.model.LowCodeModel;
 import de.zeb.lowcode.model.domain.*;
 import org.apache.commons.lang3.StringUtils;
 
-import de.zeb.lowcode.model.LowCodeModel;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@SuppressWarnings({"PMD.CollapsibleIfStatements", "PMD.UselessParentheses"})
 public class ModelCheck {
 
     /**
-     * https://www.ibm.com/docs/en/i/7.1?topic=reference-sql-limits
+     * <a href="https://www.ibm.com/docs/en/i/7.1?topic=reference-sql-limits">Doku</a>
      */
     public static final int MAX_TABELLENNAME_ZEICHEN = 128;
-    public static final int MAX_SPALTEN_ZEICHEN      = 128;
+    public static final int MAX_SPALTEN_ZEICHEN = 128;
 
     public List<String> checkModel(final LowCodeModel lcm) {
 
         List<String> fehler = new ArrayList<>();
-        // Set<String> verarbeiteteEntitaeten = new HashSet<>();
-        // Set<String> verarbeiteteWertebereiche = new HashSet<>();
 
-        for (Entitaet entitaet : lcm.getDomain()
-                .getEntitaeten()) {
-            dbTabellennamePruefen(fehler, entitaet);
-            // compositeKeysPruefen(fehler, entitaet, lcm.getDomain());
-            for (Entitaetsfeld entitaetsfeld : entitaet.getFelder()) {
-                entitaetsfeldPruefen(lcm, fehler, entitaet, entitaetsfeld);
-                dbSpaltePruefen(fehler, entitaetsfeld);
-                wertebereichPruefen(fehler, entitaetsfeld);
-                // listenNichtOptionalPruefen(fehler, entitaet, entitaetsfeld);
+        if (lcm != null) {
+            doppelteEntitaetenPruefen(lcm, fehler);
+            for (Entitaet entitaet : lcm.getDomain()
+                    .getEntitaeten()) {
+                dbTabellennamePruefen(fehler, entitaet);
+                for (Entitaetsfeld entitaetsfeld : entitaet.getFelder()) {
+                    entitaetsfeldPruefen(lcm, fehler, entitaet, entitaetsfeld);
+                    dbSpaltePruefen(fehler, entitaetsfeld);
+                    wertebereichPruefen(fehler, entitaetsfeld);
+                }
+                pkPruefen(lcm, fehler, entitaet);
+                doppelteFelderPruefen(lcm, fehler, entitaet);
             }
-            pkPruefen(lcm, fehler, entitaet);
-            doppelteFelderPruefen(lcm, fehler, entitaet);
+        } else {
+            fehler.add("LowCodeModel ist null");
         }
         return fehler;
 
     }
 
-    /**
-     * @param lcm
-     * @param fehler
-     * @param entitaet
-     */
     private void doppelteFelderPruefen(final LowCodeModel lcm, final List<String> fehler,
-            final Entitaet entitaet) {
+                                       final Entitaet entitaet) {
         List<EntitaetsfeldMitEntitaet> felderMitVererbung = getFelderMitVererbung(entitaet,
                 lcm.getDomain());
         for (EntitaetsfeldMitEntitaet feld : felderMitVererbung) {
@@ -80,7 +79,7 @@ public class ModelCheck {
     }
 
     public List<EntitaetsfeldMitEntitaet> getFelderMitVererbung(final Entitaet entitaet,
-            final DomainModel domain) {
+                                                                final DomainModel domain) {
         List<EntitaetsfeldMitEntitaet> felder = new ArrayList<>();
         for (Entitaetsfeld entitaetsfeld : entitaet.getFelder()) {
             felder.add(new EntitaetsfeldMitEntitaet(entitaet, entitaetsfeld));
@@ -94,17 +93,13 @@ public class ModelCheck {
         return felder;
     }
 
-    /**
-     * @param lcm
-     * @param fehler
-     * @param entitaet
-     */
     private void pkPruefen(final LowCodeModel lcm, final List<String> fehler,
-            final Entitaet entitaet) {
+                           final Entitaet entitaet) {
         boolean hatPk = false;
         for (Entitaetsfeld feld : entitaet.getFelderMitVererbung(lcm.getDomain())) {
             if (feld.isPk()) {
                 hatPk = true;
+                break;
             }
         }
         if (!hatPk) {
@@ -113,10 +108,6 @@ public class ModelCheck {
         }
     }
 
-    /**
-     * @param fehler
-     * @param entitaet
-     */
     private void dbTabellennamePruefen(final List<String> fehler, final Entitaet entitaet) {
         if (entitaet.getDbTabellenname() != null) {
             if (entitaet.getDbTabellenname()
@@ -127,10 +118,6 @@ public class ModelCheck {
         }
     }
 
-    /**
-     * @param fehler
-     * @param entitaetsfeld
-     */
     private void dbSpaltePruefen(final List<String> fehler, final Entitaetsfeld entitaetsfeld) {
         if (entitaetsfeld.getDbSpaltenname() != null) {
             if (entitaetsfeld.getDbSpaltenname()
@@ -157,14 +144,8 @@ public class ModelCheck {
         }
     }
 
-    /**
-     * @param lcm
-     * @param fehler
-     * @param entitaet
-     * @param entitaetsfeld
-     */
     private void entitaetsfeldPruefen(final LowCodeModel lcm, final List<String> fehler,
-            final Entitaet entitaet, final Entitaetsfeld entitaetsfeld) {
+                                      final Entitaet entitaet, final Entitaetsfeld entitaetsfeld) {
         if ((entitaetsfeld.getZielEntitaet() != null)) {
             // Prüfen ob Entiät im Domänenmodell hängt
             Entitaet entitaetByReference = lcm.getDomain()
@@ -193,4 +174,24 @@ public class ModelCheck {
         return entitaet.getName();
     }
 
+    private void doppelteEntitaetenPruefen(final LowCodeModel lcm, final List<String> fehler) {
+        Set<String> namen = new HashSet<>();
+        Set<String> duplikate = new HashSet<>();
+        for (Entitaet entitaet : lcm.getDomain().getEntitaeten()) {
+            String key = buildEntitaetKey(entitaet);
+            if (!namen.add(key)) {
+                duplikate.add(key);
+            }
+        }
+        for (String dup : duplikate) {
+            fehler.add("Entität mehrfach vorhanden: " + dup);
+        }
+    }
+
+    private String buildEntitaetKey(final Entitaet entitaet) {
+        String pkg = entitaet.getPaket();
+        String name = entitaet.getName();
+        String full = (pkg == null || pkg.isBlank() ? "" : pkg + "::") + name;
+        return full.toLowerCase(Locale.ROOT);
+    }
 }

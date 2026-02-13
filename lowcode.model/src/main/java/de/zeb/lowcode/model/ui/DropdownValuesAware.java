@@ -10,10 +10,10 @@
 package de.zeb.lowcode.model.ui;
 
 
+import de.zeb.lowcode.model.domain.WertebereichEintrag;
+
 import java.util.Collections;
 import java.util.List;
-
-import de.zeb.lowcode.model.domain.WertebereichEintrag;
 
 
 /**
@@ -23,7 +23,7 @@ import de.zeb.lowcode.model.domain.WertebereichEintrag;
 public interface DropdownValuesAware extends MaskenelementMitFeldIf {
 
     default List<WertebereichEintrag> getValues() {
-        if ( getFeld().getWertebereich() != null ) {
+        if (getFeld().getWertebereich() != null) {
             return getFeld().getWertebereich().getEintraege();
         }
         return Collections.emptyList();
